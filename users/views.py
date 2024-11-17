@@ -4,6 +4,8 @@ from django.contrib.auth import login
 from django.contrib import messages
 from .models import Client
 from .forms import ClientRegistrationForm
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 
 def register_client(request):
     if request.method == 'POST':
@@ -29,3 +31,9 @@ def register_client(request):
     else:
         form = ClientRegistrationForm()
     return render(request, 'users/register.html', {'form': form})
+
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('landing_page')
+    return render(request, 'logout.html')

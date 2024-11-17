@@ -1,22 +1,52 @@
 {% extends 'base.html' %}
+
 {% load static %}
 
-{% block title %}Iniciar Sesión{% endblock title %}
+{% block title %}Veterinaria Pochita{% endblock title %}
 
-{% block heading %}Iniciar Sesión{% endblock heading %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/style.css' %}">
+{% endblock extra_head %}
+
+{% block heading %}{% endblock heading %}
 
 {% block content %}
-<form method="post">
-    {% csrf_token %}
-    {% if form.errors %}
-        <p style="color:red;">Nombre de usuario o contraseña incorrectos.</p>
-    {% endif %}
-    <label for="username">Usuario:</label>
-    <input type="text" name="username" id="username" required><br><br>
-
-    <label for="password">Contraseña:</label>
-    <input type="password" name="password" id="password" required><br><br>
-
-    <button type="submit">Ingresar</button>
-</form>
+<div class="wrapper">
+    <form method="post" id="loginForm">
+        {% csrf_token %}
+        <h2>Iniciar Sesión</h2>
+        <div class="input-field">
+            <input type="text" name="username" required>
+            <label>Ingrese el usuario</label>
+        </div>
+        <div class="input-field">
+            <input type="password" name="password" required>
+            <label>Ingrese su contraseña</label>
+        </div>
+        <div class="forget">
+            <label for="remember">
+                <input type="checkbox" id="remember">
+                <p>Recuérdame</p>
+            </label>
+        </div>
+        
+        <div class="error-message" id="error-msg">Credenciales Incorrectas/Inexistentes, intente nuevamente.</div>
+        
+        <button type="submit">Iniciar Sesión</button>
+        <div class="register">
+            <p>No está registrado? <a href="{% url 'register_client' %}">Únete ahora!</a></p>
+        </div>
+    </form>
+</div>
 {% endblock content %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    {% if form.errors %}
+        $('#error-msg').addClass('visible');
+    {% endif %}
+});
+</script>
+{% endblock extra_scripts %}

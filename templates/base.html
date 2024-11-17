@@ -5,6 +5,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}Pochita S.A.{% endblock title %}</title>
+        <link rel="stylesheet" href="{% static 'css/style.css' %}">
         <link rel="stylesheet" href="{% static 'styles/main.css' %}">
         {% block extra_head %}{% endblock extra_head %}
     </head>
@@ -17,24 +18,29 @@
                 <li><a href="{% url 'list_inventory' %}">Inventario</a></li>
                 <li><a href="{% url 'list_invoices' %}">Facturación</a></li>
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
-            {% else %}
-                <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-                <li><a href="{% url 'register_client' %}">Registrarse</a></li>
-            {% endif %}
+                    <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
+                    <li><a href="{% url 'register_client' %}">Registrarse</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
 
     <main>
         <h1>{% block heading %}Bienvenido a Pochita S.A.{% endblock heading %}</h1>
-        {% block content %}
-        <!-- Contenido dinámico aquí -->
-        {% endblock content %}
+        <div class="wrapper">
+            {% block content %}
+            {% endblock content %}
+        </div>
     </main>
 
     <footer>
         <p>&copy; 2024 Pochita S.A. Todos los derechos reservados.</p>
     </footer>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 </html>
+
