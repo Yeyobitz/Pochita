@@ -6,6 +6,7 @@
 <h2>Regístrate como Cliente</h2>
 <form method="post">
     {% csrf_token %}
+    {{ form.as_p }}
     {{ user_form.as_p }}
     {{ client_form.as_p }}
     <button type="submit" class="button">Registrarse</button>

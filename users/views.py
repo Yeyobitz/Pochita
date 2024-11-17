@@ -1,10 +1,8 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import Client
-from .forms import ClientRegistrationForm
-from django.contrib.auth import logout
-from django.shortcuts import redirect
+from .forms import CustomUserCreationForm, ClientRegistrationForm
 
 def register_client(request):
     if request.method == 'POST':
