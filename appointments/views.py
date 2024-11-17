@@ -3,10 +3,17 @@ from django.http import HttpResponse
 from .models import Appointment
 from users.models import Client, Vet
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required, permission_required
 
+# Vista para listar citas
 # Listar citas
+@login_required
+@permission_required('appointments.view_appointment', raise_exception=True)
 def list_appointments(request):
-    appointments = Appointment.objects.all().order_by('date', 'time')
+    if request.user.groups.filter(name='Cliente').exists():
+        appointments = Appointment.objects.filter(client__user=request.user)
+    else:
+        appointments = Appointment.objects.all().order_by('date', 'time')
     return render(request, 'appointments/list_appointments.html', {'appointments': appointments})
 
 # Crear una nueva cita

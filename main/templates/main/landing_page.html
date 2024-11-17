@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Bienvenido a Pochita S.A.{% endblock title %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'main/styles.css' %}">
+{% endblock extra_head %}
+
+{% block heading %}Bienvenido a Pochita S.A.{% endblock heading %}
+
+{% block content %}
+<div class="landing-container">
+    <h2>Tu veterinaria de confianza</h2>
+    <p>En Pochita S.A., nos preocupamos por el bienestar de tus mascotas. Ofrecemos servicios de calidad para mantener a tus amigos peludos sanos y felices.</p>
+    <div class="buttons">
+        <a href="{% url 'list_appointments' %}" class="button">Gestionar Citas</a>
+        <a href="{% url 'list_medical_records' %}" class="button">Historial Médico</a>
+        <a href="{% url 'list_inventory' %}" class="button">Inventario</a>
+        <a href="{% url 'list_invoices' %}" class="button">Facturación</a>
+    </div>
+</div>
+{% endblock content %}

@@ -38,3 +38,15 @@ footer {
     padding: 10px 0;
     margin-top: 20px;
 }
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #2ecc71;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+
+.button:hover {
+    background-color: #27ae60;
+}
