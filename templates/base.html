@@ -28,9 +28,18 @@
 
     <main>
         <h1>{% block heading %}Bienvenido a Pochita S.A.{% endblock heading %}</h1>
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
         {% block content %}
         <!-- Contenido dinámico aquí -->
         {% endblock content %}
+        
     </main>
 
     <footer>

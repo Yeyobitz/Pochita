@@ -1,8 +1,30 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
 from .models import Client
+from django.core.exceptions import ValidationError
 
+
+class CustomUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True, label="Correo electrónico")
+
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
+        
+
+
+class ClientRegistrationForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ['name', 'phone_number', 'address']
+        labels = {
+            'name': 'Nombre Completo',
+            'phone_number': 'Teléfono',
+            'address': 'Dirección',
+        }
+        
+        
 class ClientRegistrationForm(forms.Form):
     username = forms.CharField(max_length=150, required=True, label="Usuario")
     email = forms.EmailField(required=True, label="Correo electrónico")
