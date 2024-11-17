@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crear Factura{% endblock title %}
+
+{% block heading %}Crear Nueva Factura{% endblock heading %}
+
+{% block content %}
+<h2>Crear Nueva Factura</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="client">Cliente:</label>
+    <select name="client" id="client" required>
+        {% for client in clients %}
+        <option value="{{ client.id }}">{{ client.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="items">Items:</label><br>
+    <textarea name="items" id="items" cols="30" rows="5" required></textarea><br><br>
+
+    <label for="total_amount">Total:</label>
+    <input type="number" name="total_amount" id="total_amount" step="0.01" min="0" required><br><br>
+
+    <button type="submit">Crear Factura</button>
+</form>
+{% endblock content %}

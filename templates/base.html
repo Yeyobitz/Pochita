@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pochita S.A.{% endblock title %}</title>
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+</head>
+<body>
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{% url 'list_appointments' %}">Citas</a></li>
+                <li><a href="{% url 'list_medical_records' %}">Historial Médico</a></li>
+                <li><a href="{% url 'list_inventory' %}">Inventario</a></li>
+                <li><a href="{% url 'list_invoices' %}">Facturación</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>{% block heading %}Bienvenido a Pochita S.A.{% endblock heading %}</h1>
+        {% block content %}
+        <!-- Contenido dinámico aquí -->
+        {% endblock content %}
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Pochita S.A. Todos los derechos reservados.</p>
+    </footer>
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle del Registro Médico{% endblock title %}
+
+{% block heading %}Detalle del Registro Médico{% endblock heading %}
+
+{% block content %}
+<h2>Registro Médico de {{ record.pet_name }}</h2>
+<p><strong>Cliente:</strong> {{ record.client.name }}</p>
+<p><strong>Diagnóstico:</strong> {{ record.diagnosis }}</p>
+<p><strong>Tratamiento:</strong> {{ record.treatment }}</p>
+{% if record.prescription %}
+<p><strong>Prescripción:</strong> {{ record.prescription }}</p>
+{% endif %}
+{% if record.notes %}
+<p><strong>Notas:</strong> {{ record.notes }}</p>
+{% endif %}
+<a href="{% url 'list_medical_records' %}">Volver al Historial Médico</a>
+{% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Detalle de la Factura{% endblock title %}
+
+{% block heading %}Detalle de la Factura{% endblock heading %}
+
+{% block content %}
+<h2>Factura N° {{ invoice.id }}</h2>
+<p><strong>Cliente:</strong> {{ invoice.client.name }}</p>
+<p><strong>Fecha:</strong> {{ invoice.date }}</p>
+<p><strong>Total:</strong> ${{ invoice.total_amount }}</p>
+<p><strong>Items:</strong></p>
+<p>{{ invoice.items }}</p>
+<a href="{% url 'list_invoices' %}">Volver al Listado de Facturas</a>
+{% endblock content %}

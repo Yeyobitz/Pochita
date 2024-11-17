@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Inventario{% endblock title %}
+
+{% block heading %}Inventario{% endblock heading %}
+
+{% block content %}
+<h2>Lista de Productos</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Nombre</th>
+            <th>Cantidad en Stock</th>
+            <th>Proveedor</th>
+            <th>Fecha de Expiración</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in inventory %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>{{ item.stock }}</td>
+            <td>{{ item.supplier }}</td>
+            <td>{{ item.expiration_date }}</td>
+            <td>
+                <a href="{% url 'update_inventory' item.pk %}">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay productos en el inventario.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'add_inventory' %}">Agregar Nuevo Producto</a>
+{% endblock content %}

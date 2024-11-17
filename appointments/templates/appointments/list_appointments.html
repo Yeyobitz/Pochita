@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Listado de Citas{% endblock title %}
+
+{% block heading %}Citas Programadas{% endblock heading %}
+
+{% block content %}
+<h2>Citas Programadas</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Cliente</th>
+            <th>Veterinario</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for appointment in appointments %}
+        <tr>
+            <td>{{ appointment.client.name }}</td>
+            <td>{{ appointment.vet.name }}</td>
+            <td>{{ appointment.date }}</td>
+            <td>{{ appointment.time }}</td>
+            <td>{{ appointment.status }}</td>
+            <td>
+                <a href="{% url 'update_appointment' appointment.pk %}">Editar</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="6">No hay citas programadas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'create_appointment' %}">Crear Nueva Cita</a>
+{% endblock content %}

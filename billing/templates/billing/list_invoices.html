@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Facturación{% endblock title %}
+
+{% block heading %}Facturas{% endblock heading %}
+
+{% block content %}
+<h2>Listado de Facturas</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Número de Factura</th>
+            <th>Cliente</th>
+            <th>Fecha</th>
+            <th>Total</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for invoice in invoices %}
+        <tr>
+            <td>{{ invoice.id }}</td>
+            <td>{{ invoice.client.name }}</td>
+            <td>{{ invoice.date }}</td>
+            <td>${{ invoice.total_amount }}</td>
+            <td>
+                <a href="{% url 'view_invoice' invoice.pk %}">Ver Detalles</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5">No hay facturas disponibles.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<a href="{% url 'create_invoice' %}">Crear Nueva Factura</a>
+{% endblock content %}
