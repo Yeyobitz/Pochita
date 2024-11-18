@@ -1,9 +1,9 @@
 from django.db import models
-from users.models import Client
+from users.models import Client, Pet
 
 class MedicalRecord(models.Model):
-    pet_name = models.CharField(max_length=100)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
     diagnosis = models.TextField()
     treatment = models.TextField()
     prescription = models.TextField(blank=True, null=True)

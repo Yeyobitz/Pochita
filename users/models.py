@@ -12,6 +12,16 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+    
+class Pet(models.Model):
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    name = models.CharField(max_length=100)
+    species = models.CharField(max_length=50)
+    breed = models.CharField(max_length=50)
+    age = models.PositiveIntegerField()
+    image = models.ImageField(upload_to='pet_images/', blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 class Vet(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
