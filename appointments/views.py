@@ -88,3 +88,16 @@ def update_appointment(request, pk):
         'pets': pets,
         'vets': vets
     })
+    
+
+@login_required
+def cancel_appointment(request, pk):
+    appointment = get_object_or_404(Appointment, pk=pk)
+    if request.method == 'POST':
+        appointment.delete()
+        messages.success(request, 'Appointment cancelled successfully')
+        return redirect('list_appointments')
+    
+    return render(request, 'appointments/cancel_appointment.html', {
+        'appointment': appointment
+    })

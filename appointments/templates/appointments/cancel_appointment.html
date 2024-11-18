@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mis Citas{% endblock title %}
+
+{% block heading %}Mis Citas Programadas{% endblock heading %}
+
+{% block content %}
+<h2>Cancel Appointment</h2>
+<p>Are you sure you want to cancel this appointment?</p>
+<p>Date: {{ appointment.date }}</p>
+<p>Time: {{ appointment.time }}</p>
+<p>Pet: {{ appointment.pet.name }}</p>
+<p>Vet: {{ appointment.vet.name }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">Confirm Cancellation</button>
+    <a href="{% url 'list_appointments' %}">Go Back</a>
+</form>
+{% endblock content %}
