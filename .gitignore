@@ -20,7 +20,6 @@ venv.bak/
 *.pot
 *.pyc
 *~
-db.sqlite3
 db.sqlite3-journal
 
 # Local settings
