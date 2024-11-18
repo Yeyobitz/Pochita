@@ -199,8 +199,19 @@ button:hover {
 
 .register {
   text-align: center;
-  margin-top: 30px;
-  color: #fff;
+  margin-top: 15px;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.register a {
+  color: #ffff;
+  text-decoration: none;
+}
+
+.register a:hover {
+  text-decoration: underline;
 }
 
 footer {

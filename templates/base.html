@@ -14,9 +14,13 @@
     <header>
         <nav>
             <ul>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'profile' %}">Mi Perfil</a></li>
+                {% endif %}
                 <li><a href="{% url 'list_appointments' %}">Citas</a></li>
                 <li><a href="{% url 'list_medical_records' %}">Historial Médico</a></li>
                 <li><a href="{% url 'list_inventory' %}">Inventario</a></li>
+                <li><a href="{% url 'list_invoices' %}">Facturación</a></li>
                 <li><a href="{% url 'list_invoices' %}">Facturación</a></li>
                 {% if user.is_authenticated %}
                     <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
