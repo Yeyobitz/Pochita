@@ -28,7 +28,7 @@ def register_client(request):
                 species=form.cleaned_data['species'],
                 breed=form.cleaned_data['breed'],
                 age=form.cleaned_data['age'],
-                image=form.cleaned_data['image']
+                image=request.FILES.get('image')  # Use request.FILES to get the image
             )
             login(request, user)
             messages.success(request, "¡Registro exitoso! Bienvenido a Pochita S.A.")
