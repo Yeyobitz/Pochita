@@ -4,6 +4,9 @@ from .models import Appointment
 from users.models import Client, Vet
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
+from django.shortcuts import render, redirect
 
 # Vista para listar citas
 # Listar citas

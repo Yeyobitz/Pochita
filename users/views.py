@@ -1,25 +1,37 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import Client
 from .forms import CustomUserCreationForm, ClientRegistrationForm
+from django.contrib.auth.models import User
+
 
 def register_client(request):
     if request.method == 'POST':
-        user_form = CustomUserCreationForm(request.POST)
-        client_form = ClientRegistrationForm(request.POST)
-        if user_form.is_valid() and client_form.is_valid():
-            user = user_form.save()
+        form = ClientRegistrationForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data['username'],
+                email=form.cleaned_data['email'],
+                password=form.cleaned_data['password1']
+            )
             Client.objects.create(
                 user=user,
-                name=client_form.cleaned_data['name'],
-                phone_number=client_form.cleaned_data['phone_number'],
-                address=client_form.cleaned_data['address']
+                name=form.cleaned_data['name'],
+                phone_number=form.cleaned_data['phone_number'],
+                address=form.cleaned_data['address'],
+                email=form.cleaned_data['email']  # Adding email field here
             )
             login(request, user)
             messages.success(request, "¡Registro exitoso! Bienvenido a Pochita S.A.")
             return redirect('landing_page')
     else:
-        user_form = CustomUserCreationForm()
-        client_form = ClientRegistrationForm()
-    return render(request, 'users/register.html', {'user_form': user_form, 'client_form': client_form})
+        form = ClientRegistrationForm()
+    
+    return render(request, 'users/register.html', {'form': form})
+
+def custom_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return redirect('landing_page')
+    return render(request, 'logout.html')

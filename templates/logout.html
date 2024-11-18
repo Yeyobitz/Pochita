@@ -1,15 +1,19 @@
 {% extends 'base.html' %}
-{% load static %}
-{% block title %}Logout{% endblock %}
+
+{% block title %}Cerrar Sesión{% endblock %}
+
+{% block heading %}{% endblock heading %}
 
 {% block content %}
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6 text-center">
-            <h2>You have been logged out</h2>
-            <p>Thanks for visiting!</p>
-            <a href="{% url 'login' %}" class="btn btn-primary">Login Again</a>
+<div class="wrapper">
+    <form method="post">
+        {% csrf_token %}
+        <h2>¿Desea cerrar sesión?</h2>
+        <p>¿Está seguro que desea salir de su cuenta?</p>
+        <button type="submit" class="btn btn-primary">Sí, cerrar sesión</button>
+        <div class="register">
+            <p>Volver al <a href="{% url 'landing_page' %}">Inicio</a></p>
         </div>
-    </div>
+    </form>
 </div>
 {% endblock %}
