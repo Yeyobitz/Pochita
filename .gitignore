@@ -1,0 +1,90 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.conda/
+
+# Django stuff:
+*.log
+*.pot
+*.pyc
+*~
+db.sqlite3
+db.sqlite3-journal
+
+# Local settings
+local_settings.py
+settings_local.py
+.env
+
+# Media files (user uploaded content)
+media/
+
+# Static files (can be generated)
+staticfiles/
+static/
+
+# Unit test / coverage reports
+coverage/
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# Translations
+*.mo
+*.pot
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Eclipse
+.project
+.pydevproject
+
+# MacOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Visual Studio
+.vs/
+
+# Other files
+*.swp
+*~
+
+# Ansible retry files
+*.retry
