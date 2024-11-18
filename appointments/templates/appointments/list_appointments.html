@@ -28,6 +28,7 @@
             <td>{{ appointment.get_status_display }}</td>
             <td>
                 <a href="{% url 'update_appointment' appointment.pk %}">Editar</a>
+                <a href="{% url 'cancel_appointment' appointment.pk %}" class="btn btn-danger">Cancelar Cita</a>
             </td>
         </tr>
         {% empty %}

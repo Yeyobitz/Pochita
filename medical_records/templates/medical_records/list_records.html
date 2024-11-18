@@ -7,6 +7,13 @@
 
 {% block content %}
 <h2>Registros Médicos</h2>
+
+{% if user.groups.all.0.name == 'Veterinario' %}
+    <div class="add-record-button">
+        <a href="{% url 'create_medical_record' %}" class="btn btn-primary">Crear Nuevo Registro Médico</a>
+    </div>
+{% endif %}
+
 <table>
     <thead>
         <tr>
