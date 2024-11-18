@@ -12,20 +12,19 @@
     {% csrf_token %}
     
     <div class="form-group">
-        <label for="pet">Mascota:</label>
-        <select name="pet" id="pet" required>
-            {% for pet in pets %}
-                <option value="{{ pet.id }}">{{ pet.name }}</option>
+        <label for="client">Cliente:</label>
+        <select name="client" id="client" required onchange="loadPets()">
+            <option value="">Seleccione un cliente</option>
+            {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
             {% endfor %}
         </select>
     </div>
 
     <div class="form-group">
-        <label for="client">Cliente:</label>
-        <select name="client" id="client" required>
-            {% for client in clients %}
-                <option value="{{ client.id }}">{{ client.name }}</option>
-            {% endfor %}
+        <label for="pet">Mascota:</label>
+        <select name="pet" id="pet" required disabled>
+            <option value="">Primero seleccione un cliente</option>
         </select>
     </div>
 
@@ -46,7 +45,29 @@
 
     <div class="form-actions">
         <button type="submit" class="btn btn-primary">Guardar Registro</button>
-        <a href="{% url 'list_records' %}" class="btn btn-secondary">Cancelar</a>
+        <a href="{% url 'list_medical_records' %}" class="btn btn-secondary">Cancelar</a>
     </div>
 </form>
+
+<script>
+    function loadPets() {
+        const clientId = document.getElementById('client').value;
+        const petSelect = document.getElementById('pet');
+        
+        if (clientId) {
+            fetch(`/medical_records/clients/${clientId}/pets/`)
+                .then(response => response.json())
+                .then(pets => {
+                    petSelect.innerHTML = '<option value="">Seleccione una mascota</option>';
+                    pets.forEach(pet => {
+                        petSelect.innerHTML += `<option value="${pet.id}">${pet.name}</option>`;
+                    });
+                    petSelect.disabled = false;
+                });
+        } else {
+            petSelect.innerHTML = '<option value="">Primero seleccione un cliente</option>';
+            petSelect.disabled = true;
+        }
+    }
+    </script>
 {% endblock content %}
