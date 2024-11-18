@@ -30,6 +30,14 @@ class ClientRegistrationForm(forms.Form):
     name = forms.CharField(max_length=100, required=True, label="Nombre completo")
     phone_number = forms.CharField(max_length=15, required=True, label="Teléfono")
     address = forms.CharField(widget=forms.Textarea, required=True, label="Dirección")
+    
+    # New pet fields
+    pet_name = forms.CharField(max_length=100, required=True, label="Nombre de la mascota")
+    species = forms.CharField(max_length=50, required=True, label="Especie")
+    breed = forms.CharField(max_length=50, required=True, label="Raza")
+    age = forms.IntegerField(required=True, min_value=0, label="Edad")
+    image = forms.ImageField(required=False, label="Foto de la mascota")
+
 
     def clean_username(self):
         username = self.cleaned_data.get('username')

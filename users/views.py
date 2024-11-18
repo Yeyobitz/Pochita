@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout
 from django.contrib import messages
-from .models import Client
+from .models import Client, Pet
 from .forms import CustomUserCreationForm, ClientRegistrationForm
 from django.contrib.auth.models import User
 
@@ -21,6 +21,14 @@ def register_client(request):
                 phone_number=form.cleaned_data['phone_number'],
                 address=form.cleaned_data['address'],
                 email=form.cleaned_data['email']  # Adding email field here
+            )
+            Pet.objects.create(
+                client=Client.objects.get(user=user),
+                name=form.cleaned_data['pet_name'],
+                species=form.cleaned_data['species'],
+                breed=form.cleaned_data['breed'],
+                age=form.cleaned_data['age'],
+                image=form.cleaned_data['image']
             )
             login(request, user)
             messages.success(request, "¡Registro exitoso! Bienvenido a Pochita S.A.")
