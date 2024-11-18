@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import Appointment
-from users.models import Client, Vet
+from users.models import Client, Pet, Vet
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
@@ -20,29 +20,68 @@ def list_appointments(request):
     return render(request, 'appointments/list_appointments.html', {'appointments': appointments})
 
 # Crear una nueva cita
+@login_required
 def create_appointment(request):
+    try:
+        client = Client.objects.get(user=request.user)
+    except Client.DoesNotExist:
+        messages.error(request, "Necesitas registrarte como cliente primero")
+        return redirect('register_client')
+
     if request.method == 'POST':
-        client_id = request.POST['client']
+        pet_id = request.POST['pet']
         vet_id = request.POST['vet']
         date = request.POST['date']
         time = request.POST['time']
-        client = get_object_or_404(Client, id=client_id)
+        
+        pet = get_object_or_404(Pet, id=pet_id)
         vet = get_object_or_404(Vet, id=vet_id)
-        Appointment.objects.create(client=client, vet=vet, date=date, time=time)
-        return redirect(reverse('list_appointments'))
+        
+        Appointment.objects.create(
+            client=client,
+            pet=pet,
+            vet=vet,
+            date=date,
+            time=time
+        )
+        return redirect('list_appointments')
 
-    clients = Client.objects.all()
+    pets = Pet.objects.filter(client=client)
     vets = Vet.objects.all()
-    return render(request, 'appointments/create_appointment.html', {'clients': clients, 'vets': vets})
-
+    context = {
+        'client': client,
+        'pets': pets,
+        'vets': vets
+    }
+    return render(request, 'appointments/create_appointment.html', context)
 # Modificar o cancelar una cita
 def update_appointment(request, pk):
     appointment = get_object_or_404(Appointment, pk=pk)
     if request.method == 'POST':
-        appointment.date = request.POST['date']
-        appointment.time = request.POST['time']
-        appointment.status = request.POST['status']
+        client = Client.objects.get(user=request.user)
+        pet_id = request.POST['pet']
+        vet_id = request.POST['vet']
+        date = request.POST['date']
+        time = request.POST['time']
+        
+        pet = get_object_or_404(Pet, id=pet_id)
+        vet = get_object_or_404(Vet, id=vet_id)
+        
+        appointment.client = client
+        appointment.pet = pet
+        appointment.vet = vet
+        appointment.date = date
+        appointment.time = time
         appointment.save()
-        return redirect(reverse('list_appointments'))
+        
+        return redirect('list_appointments')
 
-    return render(request, 'appointments/update_appointment.html', {'appointment': appointment})
+    client = Client.objects.get(user=request.user)
+    pets = Pet.objects.filter(client=client)
+    vets = Vet.objects.all()
+    return render(request, 'appointments/update_appointment.html', {
+        'appointment': appointment,
+        'client': client,
+        'pets': pets,
+        'vets': vets
+    })

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Listado de Citas{% endblock title %}
+{% block title %}Mis Citas{% endblock title %}
 
-{% block heading %}Citas Programadas{% endblock heading %}
+{% block heading %}Mis Citas Programadas{% endblock heading %}
 
 {% block content %}
-<h2>Citas Programadas</h2>
+<h2>Mis Citas</h2>
 <table>
     <thead>
         <tr>
-            <th>Cliente</th>
+            <th>Mascota</th>
             <th>Veterinario</th>
             <th>Fecha</th>
             <th>Hora</th>
@@ -21,21 +21,24 @@
     <tbody>
         {% for appointment in appointments %}
         <tr>
-            <td>{{ appointment.client.name }}</td>
+            <td>{{ appointment.pet.name }}</td>
             <td>{{ appointment.vet.name }}</td>
             <td>{{ appointment.date }}</td>
             <td>{{ appointment.time }}</td>
-            <td>{{ appointment.status }}</td>
+            <td>{{ appointment.get_status_display }}</td>
             <td>
                 <a href="{% url 'update_appointment' appointment.pk %}">Editar</a>
             </td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="6">No hay citas programadas.</td>
+            <td colspan="6">No tienes citas programadas.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'create_appointment' %}">Crear Nueva Cita</a>
+
+<div class="action-buttons">
+    <a href="{% url 'create_appointment' %}" class="btn-create">Agendar Nueva Cita</a>
+</div>
 {% endblock content %}
