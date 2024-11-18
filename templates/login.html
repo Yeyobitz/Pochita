@@ -11,6 +11,16 @@
 {% block heading %}{% endblock heading %}
 
 {% block content %}
+<style>
+    .register a {
+        color: #ffff;
+        text-decoration: none;
+    }
+        
+    .register a:hover {
+        text-decoration: underline;
+    }
+</style>
 <div class="wrapper">
     <form method="post" id="loginForm">
         {% csrf_token %}

@@ -6,84 +6,184 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'styles/style.css' %}">
+<style>
+    .pet-section {
+        display: none;
+    }
+    
+    .nav-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0;
+        gap: 10px;
+    }
+    
+    .progress-indicator {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .step {
+        display: inline-block;
+        margin: 0 5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #ddd;
+    }
+    
+    .step.active {
+        background: #4070f4;
+    }
+
+    .nav-buttons button {
+        flex: 0 1 auto;
+        min-width: 120px;
+        height: 45px;
+        padding: 0 20px;
+        line-height: 45px;
+    }
+
+    .register {
+        text-align: center;
+        margin-top: 15px;
+        width: fit-content;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .register p {
+        margin: 0;
+        font-size: 0.9em;
+    }
+
+    /* File input specific styling */
+    .input-field.file-field {
+        margin-top: 30px;
+    }
+
+    .input-field.file-field label {
+        position: absolute;
+        top: -25px;
+        left: 0;
+        color: #ffff;
+        font-size: 14px;
+    }
+
+    .input-field.file-field input[type="file"] {
+        margin-top: 5px;
+        padding: 8px 0;
+        color: #ffff;
+    }
+
+    .register a {
+        color: #ffff;
+        text-decoration: none;
+    }
+    
+    .register a:hover {
+        text-decoration: underline;
+    }
+</style>
 {% endblock extra_head %}
 
 {% block heading %}{% endblock heading %}
 
 {% block content %}
 <div class="wrapper">
-    <form method="post" enctype="multipart/form-data">
+    <form method="post" enctype="multipart/form-data" id="registrationForm">
         {% csrf_token %}
         <h2>Registro de Cliente</h2>
         
+        <div class="progress-indicator">
+            <span class="step active"></span>
+            <span class="step"></span>
+        </div>
+
         <!-- User Information Section -->
-        <div class="section-title">
-            <h3>Información Personal</h3>
-        </div>
+        <div class="user-section" id="userSection">
+            <div class="section-title">
+                <h3>Información Personal</h3>
+            </div>
+            
+            <div class="input-field">
+                <input type="text" name="username" required>
+                <label>Usuario</label>
+            </div>
         
-        <div class="input-field">
-            <input type="text" name="username" required>
-            <label>Usuario</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="email" name="email" required>
-            <label>Correo electrónico</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="password" name="password1" required>
-            <label>Contraseña</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="password" name="password2" required>
-            <label>Confirmar contraseña</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="text" name="name" required>
-            <label>Nombre completo</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="text" name="phone_number" required>
-            <label>Teléfono</label>
-        </div>
-        
-        <div class="input-field">
-            <input type="text" name="address" required>
-            <label>Dirección</label>
+            <div class="input-field">
+                <input type="email" name="email" required>
+                <label>Correo electrónico</label>
+            </div>
+            
+            <div class="input-field">
+                <input type="password" name="password1" required>
+                <label>Contraseña</label>
+            </div>
+            
+            <div class="input-field">
+                <input type="password" name="password2" required>
+                <label>Confirmar contraseña</label>
+            </div>
+            
+            <div class="input-field">
+                <input type="text" name="name" required>
+                <label>Nombre completo</label>
+            </div>
+            
+            <div class="input-field">
+                <input type="text" name="phone_number" required>
+                <label>Teléfono</label>
+            </div>
+            
+            <div class="input-field">
+                <input type="text" name="address" required>
+                <label>Dirección</label>
+            </div>
+
+            <div class="nav-buttons">
+                    <button type="button" id="nextBtn">Siguiente</button>
+            </div>
         </div>
 
         <!-- Pet Information Section -->
-        <div class="section-title">
-            <h3>Información de la Mascota</h3>
-        </div>
+        <div class="pet-section" id="petSection">
+            <div class="section-title">
+                <h3>Información de la Mascota</h3>
+            </div>
 
-        <div class="input-field">
-            <input type="text" name="pet_name" required>
-            <label>Nombre de la mascota</label>
-        </div>
+            <div class="input-field">
+                <input type="text" name="pet_name" required>
+                <label>Nombre de la mascota</label>
+            </div>
 
-        <div class="input-field">
-            <input type="text" name="species" required>
-            <label>Especie</label>
-        </div>
+            <div class="input-field">
+                <input type="text" name="species" required>
+                <label>Especie</label>
+            </div>
 
-        <div class="input-field">
-            <input type="text" name="breed" required>
-            <label>Raza</label>
-        </div>
+            <div class="input-field">
+                <input type="text" name="breed" required>
+                <label>Raza</label>
+            </div>
 
-        <div class="input-field">
-            <input type="number" name="age" required min="0">
-            <label>Edad</label>
-        </div>
+            <div class="input-field">
+                <input type="number" name="age" required min="0">
+                <label>Edad</label>
+            </div>
 
-        <div class="input-field">
-            <label class="file-label">Foto de la mascota</label>
-            <input type="file" name="image" accept="image/*">
+            <div class="input-field file-field">
+                <label>Foto de la mascota</label>
+                <input type="file" name="image" accept="image/*">
+            </div>
+
+            <div class="nav-buttons">
+                <button type="button" id="prevBtn">Anterior</button>
+                <button type="submit">Registrarse</button>
+            </div>
+        </div>
+        <div class="register">
+            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
         </div>
 
         {% if form.errors %}
@@ -95,15 +195,97 @@
             {% endfor %}
         </div>
         {% endif %}
-        
-        <button type="submit">Registrarse</button>
-        <div class="register">
-            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
-        </div>
     </form>
 </div>
 {% endblock content %}
 
 {% block extra_scripts %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        const userSection = $('#userSection');
+        const petSection = $('#petSection');
+        const nextBtn = $('#nextBtn');
+        const prevBtn = $('#prevBtn');
+        const steps = $('.step');
+        const password2Input = $('input[name="password2"]');
+
+        // Add placeholder to password confirmation
+        password2Input.attr('placeholder', ' ');
+
+        // Label positioning functionality
+        $('input').on('input', function() {
+            if ($(this).val().length > 0) {
+                $(this).addClass('has-content');
+            } else {
+                $(this).removeClass('has-content');
+            }
+        });
+
+        // Check on page load for any pre-filled inputs
+        $('input').each(function() {
+            if ($(this).val().length > 0) {
+                $(this).addClass('has-content');
+            }
+        });
+
+        nextBtn.click(function() {
+            const password1 = $('input[name="password1"]').val();
+            const password2 = password2Input.val();
+
+            if (password1 !== password2) {
+                password2Input[0].setCustomValidity('Las contraseñas no coinciden');
+                password2Input.addClass('has-content');
+                password2Input[0].reportValidity();
+                return;
+            } else {
+                password2Input[0].setCustomValidity('');
+            }
+
+            const userInputs = userSection.find('input[required]');
+            let isValid = true;
+            
+            userInputs.each(function() {
+                if (!this.reportValidity()) {
+                    $(this).addClass('has-content');
+                    isValid = false;
+                    return false;
+                }
+            });
+
+            if (isValid) {
+                userSection.hide();
+                petSection.show();
+                steps.eq(1).addClass('active');
+            }
+        });
+
+        // Enhanced password confirmation validation
+        password2Input
+            .on('input', function() {
+                const password1 = $('input[name="password1"]').val();
+                const password2 = $(this).val();
+                
+                $(this).addClass('has-content');
+                
+                if (password1 !== password2) {
+                    this.setCustomValidity('Las contraseñas no coinciden');
+                } else {
+                    this.setCustomValidity('');
+                }
+            })
+            .on('invalid', function() {
+                $(this).addClass('has-content');
+            })
+            .on('blur focus', function() {
+                $(this).addClass('has-content');
+            });
+
+        prevBtn.click(function() {
+            petSection.hide();
+            userSection.show();
+            steps.eq(1).removeClass('active');
+        });
+    });
+</script>
 {% endblock extra_scripts %}
