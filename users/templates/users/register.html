@@ -15,7 +15,7 @@
         display: flex;
         justify-content: space-between;
         margin: 20px 0;
-        gap: 10px;
+        gap: 2px;
     }
     
     .progress-indicator {
@@ -36,12 +36,13 @@
         background: #4070f4;
     }
 
+    
     .nav-buttons button {
-        flex: 0 1 auto;
-        min-width: 120px;
-        height: 45px;
-        padding: 0 20px;
-        line-height: 45px;
+        flex: 1;
+        min-width: 85px;
+        font-size: 12px;
+        white-space: nowrap;
+        padding: 0 6px;
     }
 
     .register {
@@ -84,6 +85,20 @@
     .register a:hover {
         text-decoration: underline;
     }
+
+    #addPetBtn {
+    font-size: 14px;
+    min-width: 140px; /* Increased from 120px */
+    white-space: nowrap; /* Prevents text wrapping */
+    padding: 0 15px; /* Slightly reduced padding */
+    }
+
+    .nav-buttons #addPetBtn {
+    font-size: 10px !important;
+    padding: 0 4px !important;
+    min-width: 80px;
+    }   
+
 </style>
 {% endblock extra_head %}
 
@@ -179,6 +194,7 @@
 
             <div class="nav-buttons">
                 <button type="button" id="prevBtn">Anterior</button>
+                <button type="button" id="addPetBtn">Añadir otra mascota</button>
                 <button type="submit">Registrarse</button>
             </div>
         </div>
@@ -195,6 +211,11 @@
             {% endfor %}
         </div>
         {% endif %}
+
+        <div id="petsContainer" style="display: none;">
+            <h4>Mascotas registradas:</h4>
+            <div id="petsList"></div>
+        </div>
     </form>
 </div>
 {% endblock content %}
@@ -203,89 +224,179 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        const userSection = $('#userSection');
-        const petSection = $('#petSection');
-        const nextBtn = $('#nextBtn');
-        const prevBtn = $('#prevBtn');
-        const steps = $('.step');
-        const password2Input = $('input[name="password2"]');
+    const userSection = $('#userSection');
+    const petSection = $('#petSection');
+    const nextBtn = $('#nextBtn');
+    const prevBtn = $('#prevBtn');
+    const steps = $('.step');
+    const password2Input = $('input[name="password2"]');
+    let pets = [];
+    const addPetBtn = $('#addPetBtn');
+    const petsContainer = $('#petsContainer');
+    const petsList = $('#petsList');
 
-        // Add placeholder to password confirmation
-        password2Input.attr('placeholder', ' ');
+    // Add placeholder to password confirmation
+    password2Input.attr('placeholder', ' ');
 
-        // Label positioning functionality
-        $('input').on('input', function() {
-            if ($(this).val().length > 0) {
+    // Label positioning functionality
+    $('input').on('input', function() {
+        if ($(this).val().length > 0) {
+            $(this).addClass('has-content');
+        } else {
+            $(this).removeClass('has-content');
+        }
+    });
+
+    // Check on page load for any pre-filled inputs
+    $('input').each(function() {
+        if ($(this).val().length > 0) {
+            $(this).addClass('has-content');
+        }
+    });
+
+    nextBtn.click(function() {
+        const password1 = $('input[name="password1"]').val();
+        const password2 = password2Input.val();
+
+        if (password1 !== password2) {
+            password2Input[0].setCustomValidity('Las contraseñas no coinciden');
+            password2Input.addClass('has-content');
+            password2Input[0].reportValidity();
+            return;
+        } else {
+            password2Input[0].setCustomValidity('');
+        }
+
+        const userInputs = userSection.find('input[required]');
+        let isValid = true;
+        
+        userInputs.each(function() {
+            if (!this.reportValidity()) {
                 $(this).addClass('has-content');
-            } else {
-                $(this).removeClass('has-content');
+                isValid = false;
+                return false;
             }
         });
 
-        // Check on page load for any pre-filled inputs
-        $('input').each(function() {
-            if ($(this).val().length > 0) {
-                $(this).addClass('has-content');
-            }
-        });
+        if (isValid) {
+            userSection.hide();
+            petSection.show();
+            steps.eq(1).addClass('active');
+        }
+    });
 
-        nextBtn.click(function() {
+    // Enhanced password confirmation validation
+    password2Input
+        .on('input', function() {
             const password1 = $('input[name="password1"]').val();
-            const password2 = password2Input.val();
-
-            if (password1 !== password2) {
-                password2Input[0].setCustomValidity('Las contraseñas no coinciden');
-                password2Input.addClass('has-content');
-                password2Input[0].reportValidity();
-                return;
-            } else {
-                password2Input[0].setCustomValidity('');
-            }
-
-            const userInputs = userSection.find('input[required]');
-            let isValid = true;
+            const password2 = $(this).val();
             
-            userInputs.each(function() {
-                if (!this.reportValidity()) {
-                    $(this).addClass('has-content');
-                    isValid = false;
-                    return false;
-                }
-            });
+            $(this).addClass('has-content');
+            
+            if (password1 !== password2) {
+                this.setCustomValidity('Las contraseñas no coinciden');
+            } else {
+                this.setCustomValidity('');
+            }
+        })
+        .on('invalid', function() {
+            $(this).addClass('has-content');
+        })
+        .on('blur focus', function() {
+            $(this).addClass('has-content');
+        });
 
-            if (isValid) {
-                userSection.hide();
-                petSection.show();
-                steps.eq(1).addClass('active');
+    // Add Pet Button Functionality
+    addPetBtn.click(function() {
+        const petInputs = $('#petSection').find('input[required]');
+        let isValid = true;
+        
+        petInputs.each(function() {
+            if (!this.reportValidity()) {
+                isValid = false;
+                return false;
             }
         });
 
-        // Enhanced password confirmation validation
-        password2Input
-            .on('input', function() {
-                const password1 = $('input[name="password1"]').val();
-                const password2 = $(this).val();
-                
-                $(this).addClass('has-content');
-                
-                if (password1 !== password2) {
-                    this.setCustomValidity('Las contraseñas no coinciden');
-                } else {
-                    this.setCustomValidity('');
-                }
-            })
-            .on('invalid', function() {
-                $(this).addClass('has-content');
-            })
-            .on('blur focus', function() {
-                $(this).addClass('has-content');
-            });
+        if (isValid) {
+            const petData = {
+                name: $('input[name="pet_name"]').val(),
+                species: $('input[name="species"]').val(),
+                breed: $('input[name="breed"]').val(),
+                age: $('input[name="age"]').val(),
+                image: $('input[name="image"]')[0].files[0]
+            };
 
-        prevBtn.click(function() {
-            petSection.hide();
-            userSection.show();
-            steps.eq(1).removeClass('active');
+            pets.push(petData);
+            petsContainer.show();
+            petsList.append(`<p>🐾 ${petData.name} - ${petData.species} (${petData.breed})</p>`);
+
+            $('input[name="pet_name"]').val('').removeClass('has-content');
+            $('input[name="species"]').val('').removeClass('has-content');
+            $('input[name="breed"]').val('').removeClass('has-content');
+            $('input[name="age"]').val('').removeClass('has-content');
+            $('input[name="image"]').val('');
+        }
+    });
+
+    // Form submission handling
+    $('#registrationForm').on('submit', function(e) {
+        e.preventDefault();
+        
+        // Get current pet data if fields are filled
+        const currentPetData = {
+            name: $('input[name="pet_name"]').val(),
+            species: $('input[name="species"]').val(),
+            breed: $('input[name="breed"]').val(),
+            age: $('input[name="age"]').val(),
+            image: $('input[name="image"]')[0].files[0]
+        };
+
+        // Add current pet to pets array if not empty
+        if (currentPetData.name) {
+            pets.push(currentPetData);
+        }
+        
+        const formData = new FormData(this);
+        
+        pets.forEach((pet, index) => {
+            formData.append(`pet_${index}_name`, pet.name);
+            formData.append(`pet_${index}_species`, pet.species);
+            formData.append(`pet_${index}_breed`, pet.breed);
+            formData.append(`pet_${index}_age`, pet.age);
+            if (pet.image) {
+                formData.append(`pet_${index}_image`, pet.image);
+            }
+        });
+        
+        formData.append('pets_count', pets.length);
+        
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            headers: {
+                'X-CSRFToken': $('input[name="csrfmiddlewaretoken"]').val()
+            },
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRFToken', $('input[name="csrfmiddlewaretoken"]').val());
+            },
+            success: function(response) {
+                if (response.redirect_url) {
+                    window.location.href = response.redirect_url;
+                }
+            }
         });
     });
+
+    prevBtn.click(function() {
+        petSection.hide();
+        userSection.show();
+        steps.eq(1).removeClass('active');
+    });
+});
+
 </script>
 {% endblock extra_scripts %}
