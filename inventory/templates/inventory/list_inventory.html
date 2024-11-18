@@ -1,51 +1,154 @@
 {% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Inventario{% endblock title %}
-
-{% block heading %}Inventario{% endblock heading %}
-
+{% block heading %}{% endblock heading %}
 {% block content %}
-<h2>Lista de Productos</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Cantidad en Stock</th>
-            <th>Proveedor</th>
-            <th>Categoría</th>
-            <th>Precio</th>
-            <th>Fecha de Expiración</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for item in inventory %}
-        <tr>
-            <td>
-                {% if item.image %}
-                    <img src="{{ item.image.url }}" alt="{{ item.name }}" style="max-width: 100px">
-                {% else %}
-                    <span>Sin imagen</span>
-                {% endif %}
-            </td>
-            <td>{{ item.name }}</td>
-            <td>{{ item.stock }}</td>
-            <td>{{ item.supplier }}</td>
-            <td>{{ item.category }}</td>
-            <td>${{ item.price }}</td>
-            <td>{{ item.expiration_date }}</td>
-            <td>
-                <a href="{% url 'update_inventory' item.pk %}">Editar</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="8">No hay productos en el inventario.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="{% url 'add_inventory' %}">Agregar Nuevo Producto</a>
-{% endblock content %}
+<div class="container">
+    <div class="inventory-header">
+        <h2>Inventario</h2>
+        <a href="{% url 'add_inventory' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Agregar Nuevo Producto
+        </a>
+    </div>
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Stock</th>
+                <th>Proveedor</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Fecha de Expiración</th>
+                <th>Descripción</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory %}
+            <tr class="inventory-row">
+                <td class="image-cell">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="thumbnail">
+                    {% endif %}
+                </td>
+                <td><strong>{{ item.name }}</strong></td>
+                <td class="{% if item.stock < 10 %}low-stock{% endif %}">{{ item.stock }}</td>
+                <td>{{ item.supplier }}</td>
+                <td><span class="category-badge">{{ item.category }}</span></td>
+                <td class="price">${{ item.price }}</td>
+                <td>{{ item.expiration_date }}</td>
+                <td>{{ item.description }}</td>
+                <td class="actions">
+                    <a href="{% url 'update_inventory' item.pk %}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{% url 'delete_inventory' item.pk %}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Eliminar
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<style>
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 0 10px;
+}
+
+.inventory-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.inventory-table th {
+    background: #4a90e2;
+    color: white;
+    padding: 15px;
+    font-weight: 500;
+}
+
+.inventory-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.inventory-row:hover {
+    background-color: #f8f9fa;
+    transition: background-color 0.2s ease;
+}
+
+.thumbnail {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.category-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 0.9em;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+
+.price {
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.low-stock {
+    color: #f44336;
+    font-weight: bold;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.btn {
+    text-decoration: none !important;
+    color: white !important;
+    display: inline-block;
+    border-radius: 4px;
+}
+
+.btn-primary {
+    background: #4a90e2;
+    border: none;
+}
+
+.btn-danger {
+    background: #dc3545;
+    border: none;
+}
+
+.btn-success {
+    background: #28a745;
+    border: none;
+    padding: 8px 16px;
+}
+
+.actions .btn {
+    margin: 0 3px;
+    padding: 5px 10px;
+}
+
+
+</style>
+{% endblock %}

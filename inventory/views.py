@@ -3,8 +3,32 @@ from .models import InventoryItem
 from django.urls import reverse
 
 def list_inventory(request):
-    inventory = InventoryItem.objects.all().order_by('name')
-    return render(request, 'inventory/list_inventory.html', {'inventory': inventory})
+    inventory = InventoryItem.objects.all()
+    
+    # Sorting
+    sort_by = request.GET.get('sort', 'name')
+    if sort_by in ['name', '-name', 'expiration_date', '-expiration_date', 'stock', '-stock']:
+        inventory = inventory.order_by(sort_by)
+    
+    # Category filtering
+    category = request.GET.get('category')
+    if category:
+        inventory = inventory.filter(category=category)
+    
+    # Low stock warning (less than 10 items)
+    low_stock_items = inventory.filter(stock__lt=10)
+    
+    # Expired items
+    from django.utils import timezone
+    expired_items = inventory.filter(expiration_date__lt=timezone.now().date())
+    
+    context = {
+        'inventory': inventory,
+        'low_stock_items': low_stock_items,
+        'expired_items': expired_items,
+    }
+    
+    return render(request, 'inventory/list_inventory.html', context)
 
 def update_inventory(request, pk=None):
     item = None
@@ -22,6 +46,7 @@ def update_inventory(request, pk=None):
         price = request.POST['price']
 
         if item:
+            # Update existing item
             item.name = name
             item.stock = stock
             item.supplier = supplier
@@ -33,16 +58,25 @@ def update_inventory(request, pk=None):
                 item.image = image
             item.save()
         else:
-            InventoryItem.objects.create(
-                name=name, 
-                stock=stock, 
-                supplier=supplier, 
+            # Create new item
+            item = InventoryItem.objects.create(
+                name=name,
+                stock=stock,
+                supplier=supplier,
                 expiration_date=expiration_date,
-                image=image,
                 description=description,
                 category=category,
-                price=price
+                price=price,
+                image=image if image else None
             )
-        return redirect(reverse('list_inventory'))
-
+        
+        return redirect('list_inventory')
+    
     return render(request, 'inventory/update_inventory.html', {'item': item})
+
+def delete_inventory(request, pk):
+    item = get_object_or_404(InventoryItem, pk=pk)
+    if request.method == 'POST':
+        item.delete()
+        return redirect('list_inventory')
+    return render(request, 'inventory/delete_confirm.html', {'item': item})

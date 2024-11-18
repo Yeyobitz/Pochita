@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block heading %}{% endblock heading %}
+{% block content %}
+<div class="container">
+    <h2>Confirmar Eliminación</h2>
+    <p>¿Estás seguro que deseas eliminar "{{ item.name }}" del inventario?</p>
+    
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sí, Eliminar</button>
+        <a href="{% url 'list_inventory' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}
