@@ -1,14 +1,74 @@
 {% extends 'base.html' %}
 
-{% block title %}Registro de Cliente{% endblock title %}
+{% load static %}
+
+{% block title %}Veterinaria Pochita{% endblock title %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/style.css' %}">
+{% endblock extra_head %}
+
+{% block heading %}{% endblock heading %}
 
 {% block content %}
-<h2>Regístrate como Cliente</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    {{ user_form.as_p }}
-    {{ client_form.as_p }}
-    <button type="submit" class="button">Registrarse</button>
-</form>
+<div class="wrapper">
+    <form method="post">
+        {% csrf_token %}
+        <h2>Registro de Cliente</h2>
+        
+        <div class="input-field">
+            <input type="text" name="username" required>
+            <label>Usuario</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="email" name="email" required>
+            <label>Correo electrónico</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="password" name="password1" required>
+            <label>Contraseña</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="password" name="password2" required>
+            <label>Confirmar contraseña</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="text" name="name" required>
+            <label>Nombre completo</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="text" name="phone_number" required>
+            <label>Teléfono</label>
+        </div>
+        
+        <div class="input-field">
+            <input type="text" name="address" required>
+            <label>Dirección</label>
+        </div>
+
+        {% if form.errors %}
+        <div class="error-message visible">
+            {% for field in form %}
+                {% for error in field.errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <button type="submit">Registrarse</button>
+        <div class="register">
+            <p>¿Ya tienes una cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+        </div>
+    </form>
+</div>
 {% endblock content %}
+
+{% block extra_scripts %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock extra_scripts %}
