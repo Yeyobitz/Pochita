@@ -3,7 +3,7 @@ from users.models import Client, Pet
 
 class MedicalRecord(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True)  # Permitir nulos temporalmente
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True)
     diagnosis = models.TextField()
     treatment = models.TextField()
     prescription = models.TextField(blank=True, null=True)
