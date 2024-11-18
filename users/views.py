@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from .models import Client, Pet
 from .forms import CustomUserCreationForm, ClientRegistrationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 
 
 def register_client(request):
@@ -15,6 +15,12 @@ def register_client(request):
                 email=form.cleaned_data['email'],
                 password=form.cleaned_data['password1']
             )
+            
+            # Add user to Cliente group
+            cliente_group = Group.objects.get(name='Cliente')
+            user.groups.add(cliente_group)
+
+
             Client.objects.create(
                 user=user,
                 name=form.cleaned_data['name'],
