@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Crear Factura{% endblock title %}
+
+{% block heading %}Crear Nueva Factura{% endblock heading %}
+
+{% block content %}
+<h2>Crear Nueva Factura</h2>
+<form method="post">
+    {% csrf_token %}
+    <label for="patient">Paciente:</label>
+    <select name="patient" id="patient" required>
+        {% for patient in patients %}
+            <option value="{{ patient.id }}">{{ patient.full_name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label for="service">Servicio:</label>
+    <input type="text" name="service" id="service" required><br><br>
+
+    <label for="amount">Monto:</label>
+    <input type="number" name="amount" id="amount" step="0.01" min="0" required><br><br>
+
+    <label for="payment_method">Método de Pago:</label>
+    <select name="payment_method" id="payment_method" required>
+        <option value="efectivo">Efectivo</option>
+        <option value="tarjeta">Tarjeta</option>
+        <option value="transferencia">Transferencia</option>
+    </select><br><br>
+
+    <button type="submit">Crear Factura</button>
+</form>
+<a href="{% url 'list_invoices' %}">Volver a la Lista de Facturas</a>
+{% endblock content %}
