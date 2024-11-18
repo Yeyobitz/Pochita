@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mi Perfil - Veterinaria Pochita{% endblock title %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/style.css' %}">
+<style>
+    .profile-container {
+        background: rgba(0, 0, 0, 0.6);
+        padding: 30px;
+        border-radius: 10px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 800px;
+        margin: 20px auto;
+        color: #fff;
+    }
+
+    .profile-section {
+        margin-bottom: 30px;
+    }
+
+    .profile-section h3 {
+        color: #4070f4;
+        margin-bottom: 15px;
+        border-bottom: 2px solid #4070f4;
+        padding-bottom: 5px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .info-item {
+        margin-bottom: 15px;
+    }
+
+    .info-label {
+        font-size: 0.9em;
+        color: #aaa;
+        margin-bottom: 5px;
+    }
+
+    .info-value {
+        font-size: 1.1em;
+    }
+
+    .pet-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+
+    .pet-card {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .pet-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .pet-image {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+</style>
+{% endblock extra_head %}
+{% block heading %}{% endblock heading %}
+
+{% block content %}
+<div class="profile-container">
+    <div class="profile-section">
+        <h3>Información Personal</h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Nombre</div>
+                <div class="info-value">{{ user.client.name }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Usuario</div>
+                <div class="info-value">{{ user.username }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Correo</div>
+                <div class="info-value">{{ user.email }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Teléfono</div>
+                <div class="info-value">{{ user.client.phone_number }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Dirección</div>
+                <div class="info-value">{{ user.client.address }}</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-section">
+        <h3>Mis Mascotas</h3>
+        <div class="pet-cards">
+            {% for pet in user.client.pet_set.all %}
+            <div class="pet-card">
+                {% if pet.image %}
+                    <img src="{{ pet.image.url }}" alt="{{ pet.name }}" class="pet-image">
+                {% endif %}
+                <div class="info-item">
+                    <div class="info-label">Nombre</div>
+                    <div class="info-value">{{ pet.name }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Especie</div>
+                    <div class="info-value">{{ pet.species }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Raza</div>
+                    <div class="info-value">{{ pet.breed }}</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Edad</div>
+                    <div class="info-value">{{ pet.age }} años</div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
