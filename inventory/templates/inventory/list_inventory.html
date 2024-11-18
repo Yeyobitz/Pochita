@@ -10,9 +10,12 @@
 <table>
     <thead>
         <tr>
+            <th>Imagen</th>
             <th>Nombre</th>
             <th>Cantidad en Stock</th>
             <th>Proveedor</th>
+            <th>Categoría</th>
+            <th>Precio</th>
             <th>Fecha de Expiración</th>
             <th>Acciones</th>
         </tr>
@@ -20,9 +23,18 @@
     <tbody>
         {% for item in inventory %}
         <tr>
+            <td>
+                {% if item.image %}
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}" style="max-width: 100px">
+                {% else %}
+                    <span>Sin imagen</span>
+                {% endif %}
+            </td>
             <td>{{ item.name }}</td>
             <td>{{ item.stock }}</td>
             <td>{{ item.supplier }}</td>
+            <td>{{ item.category }}</td>
+            <td>${{ item.price }}</td>
             <td>{{ item.expiration_date }}</td>
             <td>
                 <a href="{% url 'update_inventory' item.pk %}">Editar</a>
@@ -30,7 +42,7 @@
         </tr>
         {% empty %}
         <tr>
-            <td colspan="5">No hay productos en el inventario.</td>
+            <td colspan="8">No hay productos en el inventario.</td>
         </tr>
         {% endfor %}
     </tbody>

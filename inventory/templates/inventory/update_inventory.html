@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% if item %}
-    {% block title %}Actualizar Producto{% endblock title %}
-    {% block heading %}Actualizar Producto{% endblock heading %}
-{% else %}
-    {% block title %}Agregar Producto{% endblock title %}
-    {% block heading %}Agregar Nuevo Producto{% endblock heading %}
-{% endif %}
+{% block title %}
+    {% if item %}
+        Actualizar Producto
+    {% else %}
+        Agregar Producto
+    {% endif %}
+{% endblock title %}
+
+{% block heading %}
+    {% if item %}
+        Actualizar Producto
+    {% else %}
+        Agregar Nuevo Producto
+    {% endif %}
+{% endblock heading %}
 
 {% block content %}
 {% if item %}
@@ -15,7 +23,7 @@
 {% else %}
     <h2>Agregar Nuevo Producto</h2>
 {% endif %}
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <label for="name">Nombre:</label>
     <input type="text" name="name" id="name" value="{{ item.name|default_if_none:'' }}" required><br><br>
@@ -26,8 +34,23 @@
     <label for="supplier">Proveedor:</label>
     <input type="text" name="supplier" id="supplier" value="{{ item.supplier|default_if_none:'' }}" required><br><br>
 
+    <label for="category">Categoría:</label>
+    <input type="text" name="category" id="category" value="{{ item.category|default_if_none:'' }}" required><br><br>
+
+    <label for="price">Precio:</label>
+    <input type="number" name="price" id="price" value="{{ item.price|default_if_none:'' }}" step="0.01" min="0" required><br><br>
+
+    <label for="description">Descripción:</label>
+    <textarea name="description" id="description" required>{{ item.description|default_if_none:'' }}</textarea><br><br>
+
     <label for="expiration_date">Fecha de Expiración:</label>
     <input type="date" name="expiration_date" id="expiration_date" value="{{ item.expiration_date|default_if_none:'' }}" required><br><br>
+
+    <label for="image">Imagen:</label>
+    <input type="file" name="image" id="image" accept="image/*"><br><br>
+    {% if item.image %}
+        <img src="{{ item.image.url }}" alt="{{ item.name }}" style="max-width: 200px"><br><br>
+    {% endif %}
 
     <button type="submit">{% if item %}Actualizar{% else %}Agregar{% endif %} Producto</button>
 </form>
