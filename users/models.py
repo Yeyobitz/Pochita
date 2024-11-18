@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Client(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -14,6 +15,7 @@ class Client(models.Model):
         return self.name
     
 class Pet(models.Model):
+    id = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     species = models.CharField(max_length=50)
@@ -24,6 +26,7 @@ class Pet(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Vet(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
     name = models.CharField(max_length=100)
     specialization = models.CharField(max_length=100)

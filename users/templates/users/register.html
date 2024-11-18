@@ -12,9 +12,14 @@
 
 {% block content %}
 <div class="wrapper">
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <h2>Registro de Cliente</h2>
+        
+        <!-- User Information Section -->
+        <div class="section-title">
+            <h3>Información Personal</h3>
+        </div>
         
         <div class="input-field">
             <input type="text" name="username" required>
@@ -49,6 +54,36 @@
         <div class="input-field">
             <input type="text" name="address" required>
             <label>Dirección</label>
+        </div>
+
+        <!-- Pet Information Section -->
+        <div class="section-title">
+            <h3>Información de la Mascota</h3>
+        </div>
+
+        <div class="input-field">
+            <input type="text" name="pet_name" required>
+            <label>Nombre de la mascota</label>
+        </div>
+
+        <div class="input-field">
+            <input type="text" name="species" required>
+            <label>Especie</label>
+        </div>
+
+        <div class="input-field">
+            <input type="text" name="breed" required>
+            <label>Raza</label>
+        </div>
+
+        <div class="input-field">
+            <input type="number" name="age" required min="0">
+            <label>Edad</label>
+        </div>
+
+        <div class="input-field">
+            <label class="file-label">Foto de la mascota</label>
+            <input type="file" name="image" accept="image/*">
         </div>
 
         {% if form.errors %}

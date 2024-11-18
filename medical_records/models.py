@@ -2,8 +2,8 @@ from django.db import models
 from users.models import Client, Pet
 
 class MedicalRecord(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    pet = models.ForeignKey(Pet, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE, null=True)
+    pet = models.ForeignKey(Pet, on_delete=models.CASCADE, null=True, blank=True)  # Permitir nulos temporalmente
     diagnosis = models.TextField()
     treatment = models.TextField()
     prescription = models.TextField(blank=True, null=True)
@@ -12,4 +12,4 @@ class MedicalRecord(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"Record for {self.pet_name} ({self.client.name})"
+        return f"Record for {self.pet.name} ({self.client.name})"
