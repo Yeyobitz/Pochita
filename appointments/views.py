@@ -22,11 +22,14 @@ def list_appointments(request):
 # Crear una nueva cita
 @login_required
 def create_appointment(request):
-    try:
-        client = Client.objects.get(user=request.user)
-    except Client.DoesNotExist:
-        messages.error(request, "Necesitas registrarte como cliente primero")
-        return redirect('register_client')
+    # Get or create client profile for the user
+    client, created = Client.objects.get_or_create(
+        user=request.user,
+        defaults={
+            'name': request.user.get_full_name() or request.user.username,
+            'email': request.user.email
+        }
+    )
 
     if request.method == 'POST':
         pet_id = request.POST['pet']
