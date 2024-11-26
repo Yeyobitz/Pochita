@@ -3,43 +3,51 @@
 
 {% block title %}Mis Citas{% endblock title %}
 
-{% block heading %}Mis Citas Programadas{% endblock heading %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/list_inventory.css' %}">
+{% endblock extra_head %}
 
 {% block content %}
-<h2>Mis Citas</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Mascota</th>
-            <th>Veterinario</th>
-            <th>Fecha</th>
-            <th>Hora</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for appointment in appointments %}
-        <tr>
-            <td>{{ appointment.pet.name }}</td>
-            <td>{{ appointment.vet.name }}</td>
-            <td>{{ appointment.date }}</td>
-            <td>{{ appointment.time }}</td>
-            <td>{{ appointment.get_status_display }}</td>
-            <td>
-                <a href="{% url 'update_appointment' appointment.pk %}">Editar</a>
-                <a href="{% url 'cancel_appointment' appointment.pk %}" class="btn btn-danger">Cancelar Cita</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="6">No tienes citas programadas.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="appointments-container">
+    <div class="appointments-header">
+        <h2>Mis Citas</h2>
+        <a href="{% url 'create_appointment' %}" class="btn-create">Agendar Nueva Cita</a>
+    </div>
 
-<div class="action-buttons">
-    <a href="{% url 'create_appointment' %}" class="btn-create">Agendar Nueva Cita</a>
+    <div class="table-container">
+        <table class="appointments-table">
+            <thead>
+                <tr>
+                    <th>Mascota</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for appointment in appointments %}
+                <tr>
+                    <td>{{ appointment.pet.name }}</td>
+                    <td>{{ appointment.date }}</td>
+                    <td>{{ appointment.time }}</td>
+                    <td>
+                        <span class="status-badge status-{{ appointment.status|lower }}">
+                            {{ appointment.get_status_display }}
+                        </span>
+                    </td>
+                    <td class="action-buttons">
+                        <a href="{% url 'update_appointment' appointment.id %}" class="btn-edit">Editar</a>
+                        <a href="{% url 'cancel_appointment' appointment.id %}" class="btn-cancel">Cancelar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No tienes citas programadas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock content %}

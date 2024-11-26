@@ -1,48 +1,54 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Crear Cita{% endblock title %}
+{% block title %}Agendar Nueva Cita{% endblock title %}
 
-{% block heading %}Crear Nueva Cita{% endblock heading %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/list_inventory.css' %}">
+{% endblock extra_head %}
 
 {% block content %}
-<h2>Crear Nueva Cita</h2>
-<form method="post">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        <label>Cliente:</label>
-        <input type="text" value="{{ client.name }}" readonly>
+<div class="form-container">
+    <div class="form-header">
+        <h2>Agendar Nueva Cita</h2>
     </div>
 
-    <div class="form-group">
-        <label for="pet">Mascota:</label>
-        <select name="pet" id="pet" required>
-            {% for pet in pets %}
-            <option value="{{ pet.id }}">{{ pet.name }} - {{ pet.species }}</option>
-            {% endfor %}
-        </select>
-    </div>
+    <form method="post" class="appointment-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_vet">Veterinario</label>
+            <select name="vet" id="id_vet" class="form-control" required>
+                <option value="" selected disabled>Seleccione un veterinario</option>
+                {% for vet in vets %}
+                    <option value="{{ vet.id }}">{{ vet.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label for="vet">Veterinario:</label>
-        <select name="vet" id="vet" required>
-            {% for vet in vets %}
-            <option value="{{ vet.id }}">{{ vet.name }} - {{ vet.specialization }}</option>
-            {% endfor %}
-        </select>
-    </div>
+        <div class="form-group">
+            <label for="id_pet">Mascota</label>
+            <select name="pet" id="id_pet" class="form-control" required>
+                <option value="" selected disabled>Seleccione una mascota</option>
+                {% for pet in pets %}
+                    <option value="{{ pet.id }}">{{ pet.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <div class="form-group">
-        <label for="date">Fecha:</label>
-        <input type="date" name="date" id="date" required>
-    </div>
+        <div class="form-group">
+            <label for="id_date">Fecha</label>
+            <input type="date" name="date" id="id_date" class="form-control" required>
+        </div>
 
-    <div class="form-group">
-        <label for="time">Hora:</label>
-        <input type="time" name="time" id="time" required>
-    </div>
+        <div class="form-group">
+            <label for="id_time">Hora</label>
+            <input type="time" name="time" id="id_time" class="form-control" required>
+        </div>
 
-    <button type="submit">Crear Cita</button>
-</form>
+        <div class="form-buttons">
+            <button type="submit" class="btn-save">Agendar Cita</button>
+            <a href="{% url 'list_appointments' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>
 {% endblock content %}
