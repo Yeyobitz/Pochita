@@ -1,38 +1,68 @@
 {% extends 'base.html' %}
 {% block heading %}{% endblock heading %}
 {% block content %}
-<div class="container">
-    <h2>{% if item %}Editar{% else %}Agregar{% endif %} Producto</h2>
-    <form method="post" enctype="multipart/form-data">
+<div class="form-container">
+    <div class="form-header">
+        <h2>{% if item %}Editar{% else %}Agregar{% endif %} Producto</h2>
+    </div>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <form method="post" enctype="multipart/form-data" class="inventory-form">
         {% csrf_token %}
-        <div class="form-group">
-            <label>Nombre</label>
-            <input type="text" name="name" class="form-control" value="{{ item.name|default:'' }}" required>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Nombre</label>
+                <input type="text" name="name" value="{{ item.name|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Stock</label>
+                <input type="number" name="stock" value="{{ item.stock|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Proveedor</label>
+                <input type="text" name="supplier" value="{{ item.supplier|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Categoría</label>
+                <input type="text" name="category" value="{{ item.category|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Precio</label>
+                <input type="number" step="0.01" name="price" value="{{ item.price|default:'' }}" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Fecha de Expiración</label>
+                <input type="date" name="expiration_date" value="{{ item.expiration_date|date:'Y-m-d'|default:'' }}" required>
+            </div>
         </div>
-        <div class="form-group">
-            <label>Stock</label>
-            <input type="number" name="stock" class="form-control" value="{{ item.stock|default:'' }}" required>
-        </div>
-        <div class="form-group">
-            <label>Proveedor</label>
-            <input type="text" name="supplier" class="form-control" value="{{ item.supplier|default:'' }}" required>
-        </div>
-        <div class="form-group">
-            <label>Categoría</label>
-            <input type="text" name="category" class="form-control" value="{{ item.category|default:'' }}" required>
-        </div>
-        <div class="form-group">
-            <label>Precio</label>
-            <input type="number" step="0.01" name="price" class="form-control" value="{{ item.price|default:'' }}" required>
-        </div>
-        <div class="form-group">
-            <label>Fecha de Expiración</label>
-            <input type="date" name="expiration_date" class="form-control" value="{{ item.expiration_date|date:'Y-m-d'|default:'' }}" required>
-        </div>
-        <div class="form-group">
+
+        <div class="form-group full-width">
             <label>Imagen</label>
-            <input type="file" name="image" class="form-control">
+            <div class="image-upload-container">
+                <input type="file" name="image" class="image-input">
+                {% if item.image %}
+                <div class="current-image">
+                    <img src="{{ item.image.url }}" alt="{{ item.name }}">
+                    <span>Imagen actual</span>
+                </div>
+                {% endif %}
+            </div>
         </div>
+        
         <div class="form-group">
             <label>Descripción</label>
             <textarea name="description" class="form-control">{{ item.description|default:'' }}</textarea>
@@ -41,4 +71,21 @@
         <a href="{% url 'list_inventory' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+
+<style>
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+}
+
+.btn {
+    margin-right: 0.5rem;
+}
+</style>
 {% endblock %}

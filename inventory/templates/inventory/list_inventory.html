@@ -1,91 +1,161 @@
 {% extends 'base.html' %}
-{% block heading %}{% endblock heading %}
+{% load static %}
+
+{% block title %}Inventario{% endblock title %}
+
 {% block content %}
-<div class="container">
+<div class="inventory-container">
     <div class="inventory-header">
         <h2>Inventario</h2>
-        <a href="{% url 'add_inventory' %}" class="btn btn-success">
+        {% if not is_client %}
+        <a href="{% url 'add_inventory' %}" class="btn-add">
             <i class="fas fa-plus"></i> Agregar Nuevo Producto
         </a>
+        {% endif %}
     </div>
-    <table class="inventory-table">
-        <thead>
-            <tr>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Stock</th>
-                <th>Proveedor</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Fecha de Expiración</th>
-                <th>Descripción</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in inventory %}
-            <tr class="inventory-row">
-                <td class="image-cell">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="thumbnail">
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="table-container">
+        <table class="inventory-table">
+            <thead>
+                <tr>
+                    <th class="th-image">Imagen</th>
+                    <th class="th-name">Nombre</th>
+                    <th class="th-stock">Stock</th>
+                    <th class="th-supplier">Proveedor</th>
+                    <th class="th-category">Categoría</th>
+                    <th class="th-price">Precio</th>
+                    <th class="th-date">Fecha de Expiración</th>
+                    <th class="th-description">Descripción</th>
+                    {% if not is_client %}
+                    <th class="th-actions">Acciones</th>
                     {% endif %}
-                </td>
-                <td><strong>{{ item.name }}</strong></td>
-                <td class="{% if item.stock < 10 %}low-stock{% endif %}">{{ item.stock }}</td>
-                <td>{{ item.supplier }}</td>
-                <td><span class="category-badge">{{ item.category }}</span></td>
-                <td class="price">${{ item.price }}</td>
-                <td>{{ item.expiration_date }}</td>
-                <td>{{ item.description }}</td>
-                <td class="actions">
-                    <a href="{% url 'update_inventory' item.pk %}" class="btn btn-primary btn-sm">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a href="{% url 'delete_inventory' item.pk %}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i> Eliminar
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory %}
+                <tr class="inventory-row">
+                    <td class="image-cell">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="thumbnail">
+                        {% endif %}
+                    </td>
+                    <td class="name-cell"><strong>{{ item.name }}</strong></td>
+                    <td class="stock-cell {% if item.stock < 10 %}low-stock{% endif %}">{{ item.stock }}</td>
+                    <td class="supplier-cell">{{ item.supplier }}</td>
+                    <td class="category-cell"><span class="category-badge">{{ item.category }}</span></td>
+                    <td class="price-cell">${{ item.price }}</td>
+                    <td class="date-cell">{{ item.expiration_date }}</td>
+                    <td class="description-cell">
+                        <div class="description-content collapsed" id="desc-{{ item.id }}">
+                            {{ item.description }}
+                        </div>
+                        <button class="btn-expand" onclick="toggleDescription('desc-{{ item.id }}', this)">
+                            Ver más
+                        </button>
+                    </td>
+                    {% if not is_client %}
+                    <td class="actions-cell">
+                        <div class="action-buttons">
+                            <a href="{% url 'update_inventory' item.pk %}" class="btn-edit" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'delete_inventory' item.pk %}" class="btn-delete" title="Eliminar">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </div>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <style>
+/* Contenedor principal */
+.inventory-container {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Encabezado */
 .inventory-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
-    padding: 0 10px;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.inventory-header h2 {
+    color: #2c3e50;
+    margin: 0;
+    font-size: 1.8rem;
+}
+
+/* Botón Agregar */
+.btn-add {
+    background-color: #2ecc71;
+    color: white;
+    padding: 0.7rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-add:hover {
+    background-color: #27ae60;
+}
+
+/* Tabla */
+.table-container {
+    overflow-x: auto;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .inventory-table {
     width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border-collapse: collapse;
+    margin: 0;
 }
 
 .inventory-table th {
-    background: #4a90e2;
-    color: white;
-    padding: 15px;
-    font-weight: 500;
+    background-color: #f8f9fa;
+    color: #2c3e50;
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #e9ecef;
 }
 
 .inventory-table td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+    padding: 1rem;
+    border-bottom: 1px solid #e9ecef;
     vertical-align: middle;
 }
 
-.inventory-row:hover {
-    background-color: #f8f9fa;
-    transition: background-color 0.2s ease;
+/* Celdas específicas */
+.image-cell {
+    width: 80px;
 }
 
 .thumbnail {
@@ -93,62 +163,245 @@
     height: 50px;
     object-fit: cover;
     border-radius: 4px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.category-badge {
-    background: #e3f2fd;
-    color: #1976d2;
-    padding: 4px 12px;
-    border-radius: 50px;
-    font-size: 0.9em;
-    display: inline-block;
-    white-space: nowrap;
+.description-cell {
+    max-width: 300px;
+    padding: 1rem;
+    position: relative;
 }
 
+.description-content {
+    line-height: 1.5;
+    color: #555;
+    text-align: justify;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    transition: max-height 0.3s ease-out;
+}
 
-.price {
-    font-weight: bold;
-    color: #2e7d32;
+.description-content.collapsed {
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.description-content.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(transparent, white);
+}
+
+.btn-expand {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #3498db;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.btn-expand:hover {
+    background-color: #e9ecef;
+    color: #2980b9;
 }
 
 .low-stock {
-    color: #f44336;
+    color: #e74c3c;
     font-weight: bold;
 }
 
-.actions {
-    white-space: nowrap;
-}
-
-.btn {
-    text-decoration: none !important;
-    color: white !important;
+.category-badge {
+    background-color: #3498db;
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
     display: inline-block;
+}
+
+.price {
+    font-weight: bold;
+    color: #27ae60;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-edit, .btn-delete {
+    padding: 0.5rem;
     border-radius: 4px;
+    color: white;
+    text-decoration: none;
+    transition: opacity 0.3s;
 }
 
-.btn-primary {
-    background: #4a90e2;
-    border: none;
+.btn-edit {
+    background-color: #3498db;
 }
 
-.btn-danger {
-    background: #dc3545;
-    border: none;
+.btn-delete {
+    background-color: #e74c3c;
 }
 
-.btn-success {
-    background: #28a745;
-    border: none;
-    padding: 8px 16px;
+.btn-edit:hover, .btn-delete:hover {
+    opacity: 0.8;
 }
 
-.actions .btn {
-    margin: 0 3px;
-    padding: 5px 10px;
+/* Mensajes de alerta */
+.messages {
+    margin-bottom: 1rem;
 }
 
+.alert {
+    padding: 1rem;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+}
 
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .inventory-container {
+        padding: 1rem;
+    }
+    
+    .description-cell {
+        max-width: 150px;
+    }
+}
+
+@media (max-width: 768px) {
+    .inventory-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Estilos para la descripción y el botón */
+.description-cell {
+    max-width: 300px;
+    padding: 1rem;
+    position: relative;
+}
+
+.description-content {
+    line-height: 1.5;
+    color: #555;
+    text-align: justify;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    hyphens: auto;
+    transition: max-height 0.3s ease-out;
+}
+
+.description-content.collapsed {
+    max-height: 100px;
+    overflow: hidden;
+    position: relative;
+}
+
+.description-content.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    background: linear-gradient(transparent, white);
+}
+
+.btn-expand {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    color: #3498db;
+    padding: 0.3rem 0.8rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+.btn-expand:hover {
+    background-color: #e9ecef;
+    color: #2980b9;
+}
+
+/* Media queries para responsividad */
+@media (max-width: 1200px) {
+    .description-cell {
+        max-width: 250px;
+    }
+}
+
+@media (max-width: 992px) {
+    .description-cell {
+        max-width: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    .description-cell {
+        max-width: 150px;
+    }
+}
 </style>
+
+<script>
+function toggleDescription(descId, button) {
+    const descElement = document.getElementById(descId);
+    const isCollapsed = descElement.classList.contains('collapsed');
+    
+    if (isCollapsed) {
+        descElement.classList.remove('collapsed');
+        button.textContent = 'Ver menos';
+    } else {
+        descElement.classList.add('collapsed');
+        button.textContent = 'Ver más';
+    }
+}
+
+// Función para determinar si el texto necesita el botón de expandir
+document.addEventListener('DOMContentLoaded', function() {
+    const descriptions = document.querySelectorAll('.description-content');
+    descriptions.forEach(desc => {
+        const button = desc.nextElementSibling;
+        if (desc.scrollHeight <= 100) {
+            button.style.display = 'none';
+        }
+    });
+});
+</script>
+
 {% endblock %}

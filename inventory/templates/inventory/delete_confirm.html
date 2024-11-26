@@ -3,7 +3,21 @@
 {% block content %}
 <div class="container">
     <h2>Confirmar Eliminación</h2>
-    <p>¿Estás seguro que deseas eliminar "{{ item.name }}" del inventario?</p>
+    
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <div class="alert alert-warning">
+        <p>¿Estás seguro que deseas eliminar "{{ item.name }}" del inventario?</p>
+        <p>Esta acción no se puede deshacer.</p>
+    </div>
     
     <form method="post">
         {% csrf_token %}
@@ -11,4 +25,28 @@
         <a href="{% url 'list_inventory' %}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
+
+<style>
+.container {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: 0.25rem;
+}
+
+.alert-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.btn {
+    margin-right: 0.5rem;
+}
+</style>
 {% endblock %}
