@@ -3,16 +3,12 @@
 
 {% block title %}Inventario{% endblock title %}
 
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'styles/list_inventory.css' %}">
-{% endblock extra_head %}
-
 {% block content %}
-<div class="inventory-container">
-    <div class="inventory-header">
+<div class="table-container">
+    <div class="header-actions">
         <h2>Inventario</h2>
         {% if not is_client %}
-        <a href="{% url 'add_inventory' %}" class="btn-add">
+        <a href="{% url 'add_inventory' %}" class="btn-view">
             <i class="fas fa-plus"></i> Agregar Nuevo Producto
         </a>
         {% endif %}
@@ -28,65 +24,48 @@
     </div>
     {% endif %}
 
-    <div class="table-container">
-        <table class="inventory-table">
-            <thead>
-                <tr>
-                    <th class="th-image">Imagen</th>
-                    <th class="th-name">Nombre</th>
-                    <th class="th-stock">Stock</th>
-                    <th class="th-supplier">Proveedor</th>
-                    <th class="th-category">Categoría</th>
-                    <th class="th-price">Precio</th>
-                    <th class="th-date">Fecha de Expiración</th>
-                    <th class="th-description">Descripción</th>
-                    {% if not is_client %}
-                    <th class="th-actions">Acciones</th>
+    <table>
+        <thead>
+            <tr>
+                <th>Imagen</th>
+                <th>Nombre</th>
+                <th>Stock</th>
+                <th>Proveedor</th>
+                <th>Categoría</th>
+                <th>Precio</th>
+                <th>Fecha de Expiración</th>
+                {% if not is_client %}
+                <th>Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in inventory %}
+            <tr>
+                <td data-label="Imagen">
+                    {% if item.image %}
+                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="thumbnail">
                     {% endif %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in inventory %}
-                <tr class="inventory-row">
-                    <td class="image-cell">
-                        {% if item.image %}
-                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="thumbnail">
-                        {% endif %}
-                    </td>
-                    <td class="name-cell"><strong>{{ item.name }}</strong></td>
-                    <td class="stock-cell {% if item.stock < 10 %}low-stock{% endif %}">{{ item.stock }}</td>
-                    <td class="supplier-cell">{{ item.supplier }}</td>
-                    <td class="category-cell"><span class="category-badge">{{ item.category }}</span></td>
-                    <td class="price-cell">${{ item.price }}</td>
-                    <td class="date-cell">{{ item.expiration_date }}</td>
-                    <td class="description-cell">
-                        <div class="description-content collapsed" id="desc-{{ item.id }}">
-                            {{ item.description }}
-                        </div>
-                        <button class="btn-expand" onclick="toggleDescription('desc-{{ item.id }}', this)">
-                            Ver más
-                        </button>
-                    </td>
-                    {% if not is_client %}
-                    <td class="actions-cell">
-                        <div class="action-buttons">
-                            <a href="{% url 'update_inventory' item.pk %}" class="btn-edit" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{% url 'delete_inventory' item.pk %}" class="btn-delete" title="Eliminar">
-                                <i class="fas fa-trash"></i>
-                            </a>
-                        </div>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </td>
+                <td data-label="Nombre">{{ item.name }}</td>
+                <td data-label="Stock">{{ item.stock }}</td>
+                <td data-label="Proveedor">{{ item.supplier }}</td>
+                <td data-label="Categoría">{{ item.category }}</td>
+                <td data-label="Precio">${{ item.price }}</td>
+                <td data-label="Fecha de Expiración">{{ item.expiration_date }}</td>
+                {% if not is_client %}
+                <td data-label="Acciones" class="action-buttons">
+                    <a href="{% url 'update_inventory' item.pk %}" class="btn-edit">Editar</a>
+                    <a href="{% url 'delete_inventory' item.pk %}" class="btn-delete">Eliminar</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">No hay productos en el inventario.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock content %}
-
-{% block extra_scripts %}
-<script src="{% static 'js/list_inventory.js' %}"></script>
-{% endblock extra_scripts %}

@@ -6,34 +6,39 @@
 {% block heading %}Facturas{% endblock heading %}
 
 {% block content %}
-<h2>Listado de Facturas</h2>
-<table>
-    <thead>
-        <tr>
-            <th>Número de Factura</th>
-            <th>Cliente</th>
-            <th>Fecha</th>
-            <th>Total</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for invoice in invoices %}
-        <tr>
-            <td>{{ invoice.id }}</td>
-            <td>{{ invoice.client.name }}</td>
-            <td>{{ invoice.date }}</td>
-            <td>${{ invoice.total_amount }}</td>
-            <td>
-                <a href="{% url 'view_invoice' invoice.pk %}">Ver Detalles</a>
-            </td>
-        </tr>
-        {% empty %}
-        <tr>
-            <td colspan="5">No hay facturas disponibles.</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-<a href="{% url 'create_invoice' %}">Crear Nueva Factura</a>
+<div class="table-container">
+    <div class="header-actions">
+        <h2>Listado de Facturas</h2>
+        <a href="{% url 'create_invoice' %}" class="btn-view">Crear Nueva Factura</a>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Número de Factura</th>
+                <th>Cliente</th>
+                <th>Fecha</th>
+                <th>Total</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for invoice in invoices %}
+            <tr>
+                <td data-label="Número">{{ invoice.id }}</td>
+                <td data-label="Cliente">{{ invoice.client.name }}</td>
+                <td data-label="Fecha">{{ invoice.date }}</td>
+                <td data-label="Total">${{ invoice.total_amount }}</td>
+                <td data-label="Acciones" class="action-buttons">
+                    <a href="{% url 'view_invoice' invoice.pk %}" class="btn-view">Ver Detalles</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">No hay facturas disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock content %}

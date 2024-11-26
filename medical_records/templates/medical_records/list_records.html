@@ -3,46 +3,40 @@
 
 {% block title %}Historial Médico{% endblock title %}
 
-{% block extra_head %}
-<link rel="stylesheet" href="{% static 'styles/list_inventory.css' %}">
-{% endblock extra_head %}
-
 {% block content %}
-<div class="medical-records-container">
-    <div class="record-header">
+<div class="table-container">
+    <div class="header-actions">
         <h2>Registros Médicos</h2>
         {% if user.groups.all.0.name == 'Veterinario' %}
-            <a href="{% url 'create_medical_record' %}" class="btn-create">Crear Nuevo Registro</a>
+            <a href="{% url 'create_medical_record' %}" class="btn-view">Crear Nuevo Registro</a>
         {% endif %}
     </div>
 
-    <div class="table-container">
-        <table class="medical-records-table">
-            <thead>
-                <tr>
-                    <th>Mascota</th>
-                    <th>Diagnóstico</th>
-                    <th>Tratamiento</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for record in medical_records %}
-                <tr>
-                    <td>{{ record.pet.name }}</td>
-                    <td>{{ record.diagnosis }}</td>
-                    <td>{{ record.treatment }}</td>
-                    <td>
-                        <a href="{% url 'view_medical_record' record.id %}" class="btn-view">Ver Detalles</a>
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="text-center">No hay registros médicos disponibles.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Mascota</th>
+                <th>Diagnóstico</th>
+                <th>Tratamiento</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in medical_records %}
+            <tr>
+                <td data-label="Mascota">{{ record.pet.name }}</td>
+                <td data-label="Diagnóstico">{{ record.diagnosis }}</td>
+                <td data-label="Tratamiento">{{ record.treatment }}</td>
+                <td data-label="Acciones" class="action-buttons">
+                    <a href="{% url 'view_medical_record' record.id %}" class="btn-view">Ver Detalles</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center">No hay registros médicos disponibles.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock content %}
