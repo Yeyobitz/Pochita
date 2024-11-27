@@ -1,3 +1,4 @@
+
 /* Variables globales */
 :root {
     --primary-color: #4070f4;
@@ -57,3 +58,152 @@ body {
     background-color: var(--info-color);
     color: white;
 }
+
+/* Estilos mejorados para la barra de navegación */
+nav {
+    width: 100%;
+    padding: 15px 30px;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav ul {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+nav ul li a {
+    color: var(--text-color);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+nav ul li a:hover {
+    background: rgba(64, 112, 244, 0.15);
+    color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+nav ul li a.active {
+    background: var(--primary-color);
+    color: white;
+}
+
+nav ul li a::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+nav ul li a:hover::after {
+    width: 80%;
+}
+
+/* Ajuste para el contenido principal */
+main {
+    margin-top: 80px;
+    padding-top: 20px;
+}
+
+/* Efecto especial para el botón de cerrar sesión */
+nav ul li a[href*="logout"] {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin-left: 15px;
+}
+
+nav ul li a[href*="logout"]:hover {
+    background: rgba(220, 53, 69, 0.1);
+    color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+/* Efecto especial para el botón de iniciar sesión */
+nav ul li a[href*="login"] {
+    border: 1px solid var(--primary-color);
+    margin-left: 15px;
+}
+
+nav ul li a[href*="login"]:hover {
+    background: var(--primary-color);
+    color: white;
+}
+
+header {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(10px);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+nav {
+    padding: 15px 30px;
+}
+
+nav ul {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 5px;
+}
+
+nav ul li {
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+nav ul li a:hover {
+    background: rgba(64, 112, 244, 0.15);
+    color: #4070f4;
+    transform: translateY(-1px);
+}
+

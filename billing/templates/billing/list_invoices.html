@@ -19,6 +19,7 @@
                 <th>Cliente</th>
                 <th>Fecha</th>
                 <th>Total</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -29,13 +30,18 @@
                 <td data-label="Cliente">{{ invoice.client.name }}</td>
                 <td data-label="Fecha">{{ invoice.date }}</td>
                 <td data-label="Total">${{ invoice.total_amount }}</td>
+                <td data-label="Estado">
+                    <span class="status-badge status-{{ invoice.payment_status }}">
+                        {{ invoice.get_payment_status_display }}
+                    </span>
+                </td>
                 <td data-label="Acciones" class="action-buttons">
                     <a href="{% url 'view_invoice' invoice.pk %}" class="btn-view">Ver Detalles</a>
                 </td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" class="text-center">No hay facturas disponibles.</td>
+                <td colspan="6" class="text-center">No hay facturas disponibles.</td>
             </tr>
             {% endfor %}
         </tbody>

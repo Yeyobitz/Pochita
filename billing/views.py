@@ -4,6 +4,7 @@ from django.utils import timezone
 from .models import Invoice
 from users.models import Client
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Listar facturas (modificado para filtrar por cliente)
 @login_required
@@ -17,21 +18,45 @@ def list_invoices(request):
 # Crear factura
 @login_required
 def create_invoice(request):
-    if request.method == 'POST':
-        client_id = request.POST['client']
-        items = request.POST['items']
-        total_amount = request.POST['total_amount']
-        client = get_object_or_404(Client, id=client_id)
-        date = timezone.now().date()
-        Invoice.objects.create(client=client, items=items, total_amount=total_amount, date=date)
-        return redirect(reverse('list_invoices'))
-    
-    # Lista de clientes para el formulario (solo accesible por admin/personal)
-    if request.user.groups.filter(name='Cliente').exists():  # Bloquea acceso a clientes
+    if request.user.groups.filter(name='Cliente').exists():
         return redirect('list_invoices')
     
-    clients = Client.objects.all()
-    return render(request, 'billing/create_invoice.html', {'clients': clients})
+    if request.method == 'POST':
+        patient_id = request.POST.get('patient')
+        service = request.POST.get('service')
+        amount = request.POST.get('amount')
+        payment_status = request.POST.get('payment_status', 'unpaid')
+        
+        # Solo permitir estado "pagado" para admin y veterinario
+        if payment_status == 'paid' and not (
+            request.user.is_superuser or 
+            request.user.groups.filter(name='Veterinario').exists()
+        ):
+            payment_status = 'unpaid'
+        
+        if all([patient_id, service, amount]):
+            try:
+                patient = get_object_or_404(Client, id=patient_id)
+                Invoice.objects.create(
+                    client=patient,
+                    items=service,
+                    total_amount=amount,
+                    payment_status=payment_status,
+                    date=timezone.now().date()
+                )
+                messages.success(request, 'Factura creada exitosamente.')
+                return redirect('list_invoices')
+            except Exception as e:
+                messages.error(request, f'Error al crear la factura: {str(e)}')
+        else:
+            messages.error(request, 'Por favor complete todos los campos.')
+    
+    patients = Client.objects.all()
+    is_staff = request.user.is_superuser or request.user.groups.filter(name='Veterinario').exists()
+    return render(request, 'billing/create_invoice.html', {
+        'patients': patients,
+        'is_staff': is_staff
+    })
 
 # Ver factura (sin modificaciones, ya correcto)
 @login_required

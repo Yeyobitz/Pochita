@@ -16,17 +16,23 @@
     <form method="post" class="appointment-form">
         {% csrf_token %}
         <div class="form-group">
-            <label for="id_vet">Veterinario</label>
+            <label for="id_vet">Veterinario:</label>
             <select name="vet" id="id_vet" class="form-control" required>
                 <option value="" selected disabled>Seleccione un veterinario</option>
                 {% for vet in vets %}
-                    <option value="{{ vet.id }}">{{ vet.username }}</option>
+                    <option value="{{ vet.id }}">
+                        {% if vet.user.get_full_name %}
+                            {{ vet.user.get_full_name }}
+                        {% else %}
+                            {{ vet.user.username }}
+                        {% endif %}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="form-group">
-            <label for="id_pet">Mascota</label>
+            <label for="id_pet">Mascota:</label>
             <select name="pet" id="id_pet" class="form-control" required>
                 <option value="" selected disabled>Seleccione una mascota</option>
                 {% for pet in pets %}
@@ -36,12 +42,12 @@
         </div>
 
         <div class="form-group">
-            <label for="id_date">Fecha</label>
+            <label for="id_date">Fecha:</label>
             <input type="date" name="date" id="id_date" class="form-control" required>
         </div>
 
         <div class="form-group">
-            <label for="id_time">Hora</label>
+            <label for="id_time">Hora:</label>
             <input type="time" name="time" id="id_time" class="form-control" required>
         </div>
 

@@ -15,8 +15,9 @@
 
     <form method="post" class="appointment-form">
         {% csrf_token %}
+        
         <div class="form-group">
-            <label for="id_vet">Veterinario</label>
+            <label for="id_vet">Veterinario:</label>
             <select name="vet" id="id_vet" class="form-control" required>
                 <option value="{{ appointment.vet.id }}" selected>{{ appointment.vet.username }}</option>
                 {% for vet in vets %}
@@ -28,7 +29,7 @@
         </div>
 
         <div class="form-group">
-            <label for="id_pet">Mascota</label>
+            <label for="id_pet">Mascota:</label>
             <select name="pet" id="id_pet" class="form-control" required>
                 <option value="{{ appointment.pet.id }}" selected>{{ appointment.pet.name }}</option>
                 {% for pet in pets %}
@@ -40,23 +41,25 @@
         </div>
 
         <div class="form-group">
-            <label for="id_date">Fecha</label>
-            <input type="date" name="date" id="id_date" class="form-control" 
-                   value="{{ appointment.date|date:'Y-m-d' }}" required>
+            <label for="id_date">Fecha:</label>
+            <input type="date" name="date" id="id_date" value="{{ appointment.date|date:'Y-m-d' }}" class="form-control" required>
         </div>
 
         <div class="form-group">
-            <label for="id_time">Hora</label>
-            <input type="time" name="time" id="id_time" class="form-control" 
-                   value="{{ appointment.time|time:'H:i' }}" required>
+            <label for="id_time">Hora:</label>
+            <input type="time" name="time" id="id_time" value="{{ appointment.time|time:'H:i' }}" class="form-control" required>
         </div>
 
         <div class="form-group">
-            <label for="id_status">Estado</label>
-            <select name="status" id="id_status" class="form-control">
-                <option value="SCHEDULED" {% if appointment.status == 'SCHEDULED' %}selected{% endif %}>Programada</option>
-                <option value="COMPLETED" {% if appointment.status == 'COMPLETED' %}selected{% endif %}>Completada</option>
-                <option value="CANCELLED" {% if appointment.status == 'CANCELLED' %}selected{% endif %}>Cancelada</option>
+            <label for="id_status">Estado:</label>
+            <select name="status" id="id_status" class="form-control" required>
+                {% for status_code, status_label in status_choices %}
+                    <option value="{{ status_code }}" 
+                            {% if appointment.status == status_code %}selected{% endif %}
+                            {% if is_client and status_code == 'COMPLETED' %}disabled{% endif %}>
+                        {{ status_label }}
+                    </option>
+                {% endfor %}
             </select>
         </div>
 

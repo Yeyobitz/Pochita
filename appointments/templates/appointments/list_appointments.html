@@ -31,9 +31,14 @@
                         {{ appointment.get_status_display }}
                     </span>
                 </td>
-                <td data-label="Acciones" class="action-buttons">
+                <td data-label="ACCIONES" class="action-buttons">
                     <a href="{% url 'update_appointment' appointment.id %}" class="btn-edit">Editar</a>
-                    <a href="{% url 'cancel_appointment' appointment.id %}" class="btn-cancel">Cancelar</a>
+                    <a href="{% url 'cancel_appointment' appointment.id %}" 
+                       class="btn-cancel"
+                       onclick="return confirm('¿Estás seguro de que deseas eliminar esta cita? Esta acción no se puede deshacer.')"
+                       style="background-color: #dc3545; color: white;">
+                        Cancelar
+                    </a>
                 </td>
             </tr>
             {% empty %}

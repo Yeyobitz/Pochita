@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 
 # Vista para listar citas
 # Listar citas
@@ -32,72 +33,143 @@ def create_appointment(request):
     )
 
     if request.method == 'POST':
-        pet_id = request.POST['pet']
-        vet_id = request.POST['vet']
-        date = request.POST['date']
-        time = request.POST['time']
+        pet_id = request.POST.get('pet')
+        vet_id = request.POST.get('vet')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
         
-        pet = get_object_or_404(Pet, id=pet_id)
-        vet = get_object_or_404(Vet, id=vet_id)
+        # Debug logs
+        print("==== DEBUG CREATE APPOINTMENT ====")
+        print(f"POST data: {request.POST}")
+        print(f"Pet ID: {pet_id}")
+        print(f"Vet ID: {vet_id}")
+        print(f"Date: {date}")
+        print(f"Time: {time}")
         
-        Appointment.objects.create(
-            client=client,
-            pet=pet,
-            vet=vet,
-            date=date,
-            time=time
-        )
-        return redirect('list_appointments')
+        if all([pet_id, vet_id, date, time]):
+            try:
+                # Intentar obtener las instancias necesarias
+                pet = Pet.objects.get(id=pet_id)
+                print(f"Pet found: {pet}")
+                
+                vet = Vet.objects.get(id=vet_id)
+                print(f"Vet found: {vet}")
+                
+                # Crear la cita
+                appointment = Appointment.objects.create(
+                    client=client,
+                    pet=pet,
+                    vet=vet,
+                    date=date,
+                    time=time,
+                    status='SCHEDULED'
+                )
+                print(f"Appointment created: {appointment}")
+                
+                messages.success(request, 'Cita agendada exitosamente.')
+                return redirect('list_appointments')
+            except Pet.DoesNotExist:
+                print("Error: Pet not found")
+                messages.error(request, 'La mascota seleccionada no existe.')
+            except Vet.DoesNotExist:
+                print("Error: Vet not found")
+                messages.error(request, 'El veterinario seleccionado no existe.')
+            except Exception as e:
+                print(f"Error: {str(e)}")
+                messages.error(request, f'Error al agendar la cita: {str(e)}')
+        else:
+            missing = []
+            if not pet_id: missing.append('mascota')
+            if not vet_id: missing.append('veterinario')
+            if not date: missing.append('fecha')
+            if not time: missing.append('hora')
+            print(f"Missing fields: {', '.join(missing)}")
+            messages.error(request, f'Por favor complete los siguientes campos: {", ".join(missing)}')
 
-    pets = Pet.objects.filter(client=client)
+    # Obtener las opciones para el formulario
     vets = Vet.objects.all()
+    pets = Pet.objects.filter(client=client)
+    
+    # Debug log de opciones disponibles
+    print("==== Available Options ====")
+    print(f"Vets: {list(vets.values_list('id', 'user__username'))}")
+    print(f"Pets: {list(pets.values_list('id', 'name'))}")
+    
     context = {
         'client': client,
         'pets': pets,
         'vets': vets
     }
     return render(request, 'appointments/create_appointment.html', context)
-# Modificar o cancelar una cita
-def update_appointment(request, pk):
-    appointment = get_object_or_404(Appointment, pk=pk)
-    if request.method == 'POST':
-        client = Client.objects.get(user=request.user)
-        pet_id = request.POST['pet']
-        vet_id = request.POST['vet']
-        date = request.POST['date']
-        time = request.POST['time']
-        
-        pet = get_object_or_404(Pet, id=pet_id)
-        vet = get_object_or_404(Vet, id=vet_id)
-        
-        appointment.client = client
-        appointment.pet = pet
-        appointment.vet = vet
-        appointment.date = date
-        appointment.time = time
-        appointment.save()
-        
-        return redirect('list_appointments')
 
-    client = Client.objects.get(user=request.user)
-    pets = Pet.objects.filter(client=client)
-    vets = Vet.objects.all()
-    return render(request, 'appointments/update_appointment.html', {
+# Modificar o cancelar una cita
+@login_required
+def update_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    
+    # Verificar permisos
+    if request.user.groups.filter(name='Cliente').exists() and appointment.client.user != request.user:
+        return redirect('list_appointments')
+    
+    if request.method == 'POST':
+        pet_id = request.POST.get('pet')
+        vet_id = request.POST.get('vet')
+        date = request.POST.get('date')
+        time = request.POST.get('time')
+        status = request.POST.get('status')
+        
+        # Validar estados permitidos para clientes
+        if request.user.groups.filter(name='Cliente').exists():
+            if status not in ['SCHEDULED', 'CANCELLED']:
+                status = 'SCHEDULED'
+        
+        try:
+            appointment.pet_id = pet_id
+            appointment.vet_id = vet_id
+            appointment.date = date
+            appointment.time = time
+            appointment.status = status
+            appointment.save()
+            
+            messages.success(request, 'Cita actualizada exitosamente.')
+            return redirect('list_appointments')
+        except Exception as e:
+            messages.error(request, f'Error al actualizar la cita: {str(e)}')
+    
+    # Definir estados disponibles según el tipo de usuario
+    if request.user.groups.filter(name='Cliente').exists():
+        status_choices = [
+            ('SCHEDULED', 'Programado'),
+            ('CANCELLED', 'Cancelado')
+        ]
+    else:
+        status_choices = Appointment.STATUS_CHOICES
+    
+    context = {
         'appointment': appointment,
-        'client': client,
-        'pets': pets,
-        'vets': vets
-    })
+        'pets': Pet.objects.filter(client=appointment.client),
+        'vets': Vet.objects.all(),
+        'status_choices': status_choices,
+        'is_client': request.user.groups.filter(name='Cliente').exists()
+    }
+    
+    return render(request, 'appointments/update_appointment.html', context)
     
 
 @login_required
-def cancel_appointment(request, pk):
-    appointment = get_object_or_404(Appointment, pk=pk)
-    if request.method == 'POST':
-        appointment.delete()
-        messages.success(request, 'Appointment cancelled successfully')
+def cancel_appointment(request, appointment_id):
+    appointment = get_object_or_404(Appointment, id=appointment_id)
+    
+    # Verificar si el usuario tiene permiso para cancelar la cita
+    if request.user.groups.filter(name='Cliente').exists() and appointment.client.user != request.user:
+        messages.error(request, 'No tienes permiso para eliminar esta cita.')
         return redirect('list_appointments')
     
-    return render(request, 'appointments/cancel_appointment.html', {
-        'appointment': appointment
-    })
+    try:
+        # Eliminar la cita en lugar de cambiar su estado
+        appointment.delete()
+        messages.success(request, 'Cita eliminada exitosamente.')
+    except Exception as e:
+        messages.error(request, f'Error al eliminar la cita: {str(e)}')
+    
+    return redirect('list_appointments')

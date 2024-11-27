@@ -3,33 +3,61 @@
 
 {% block title %}Crear Factura{% endblock title %}
 
-{% block heading %}Crear Nueva Factura{% endblock heading %}
-
 {% block content %}
-<h2>Crear Nueva Factura</h2>
-<form method="post">
-    {% csrf_token %}
-    <label for="patient">Paciente:</label>
-    <select name="patient" id="patient" required>
-        {% for patient in patients %}
-            <option value="{{ patient.id }}">{{ patient.full_name }}</option>
+<div class="form-container">
+    <div class="form-header">
+        <h2>Crear Nueva Factura</h2>
+    </div>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
         {% endfor %}
-    </select><br><br>
+    </div>
+    {% endif %}
 
-    <label for="service">Servicio:</label>
-    <input type="text" name="service" id="service" required><br><br>
+    <form method="post" class="invoice-form">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="patient">Paciente:</label>
+            <select name="patient" id="patient" class="form-control" required>
+                <option value="" selected disabled>Seleccione un paciente</option>
+                {% for patient in patients %}
+                    <option value="{{ patient.id }}">{{ patient.full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
 
-    <label for="amount">Monto:</label>
-    <input type="number" name="amount" id="amount" step="0.01" min="0" required><br><br>
+        <div class="form-group">
+            <label for="service">Servicio:</label>
+            <input type="text" name="service" id="service" class="form-control" required>
+        </div>
 
-    <label for="payment_method">Método de Pago:</label>
-    <select name="payment_method" id="payment_method" required>
-        <option value="efectivo">Efectivo</option>
-        <option value="tarjeta">Tarjeta</option>
-        <option value="transferencia">Transferencia</option>
-    </select><br><br>
+        <div class="form-group">
+            <label for="amount">Monto:</label>
+            <input type="number" name="amount" id="amount" step="0.01" min="0" class="form-control" required>
+        </div>
 
-    <button type="submit">Crear Factura</button>
-</form>
-<a href="{% url 'list_invoices' %}">Volver a la Lista de Facturas</a>
+        <div class="form-group">
+            <label for="payment_status">Estado de Pago:</label>
+            <select name="payment_status" id="payment_status" class="form-control" required>
+                <option value="unpaid">No Pagado</option>
+                {% if is_staff %}
+                    <option value="paid">Pagado</option>
+                {% endif %}
+            </select>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-save">Crear Factura</button>
+            <a href="{% url 'list_invoices' %}" class="btn-cancel">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+
 {% endblock content %}

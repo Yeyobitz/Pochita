@@ -26,8 +26,7 @@ class Pet(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 class Vet(models.Model):
-    id = models.AutoField(primary_key=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     specialization = models.CharField(max_length=100)
     email = models.EmailField(unique=True)
@@ -36,4 +35,4 @@ class Vet(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return self.user.get_full_name() or self.user.username

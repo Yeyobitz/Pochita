@@ -6,11 +6,14 @@ class Invoice(models.Model):
     date = models.DateField()  # Fecha de la factura
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)  # Monto total
     items = models.TextField()  # Detalle de los ítems
-    payment_status = models.CharField(max_length=20, choices=[
-        ('paid', 'Pagado'),
-        ('pending', 'Pendiente'),
-        ('overdue', 'Vencido')
-    ], default='pending')  # Estado del pago
+    payment_status = models.CharField(
+        max_length=20, 
+        choices=[
+            ('paid', 'Pagado'),
+            ('unpaid', 'No Pagado')
+        ],
+        default='unpaid'
+    )  # Estado del pago
     created_at = models.DateTimeField(auto_now_add=True)  # Fecha de creación
     updated_at = models.DateTimeField(auto_now=True)  # Fecha de última actualización
 
