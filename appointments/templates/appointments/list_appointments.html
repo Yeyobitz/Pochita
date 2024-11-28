@@ -2,7 +2,10 @@
 {% load static %}
 
 {% block title %}Mis Citas{% endblock title %}
-
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/components.css' %}">
+{% endblock extra_head %}
+{% block heading %}{% endblock heading %}
 {% block content %}
 <div class="table-container">
     <div class="header-actions">
