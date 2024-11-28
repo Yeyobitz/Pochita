@@ -1,11 +1,16 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>{% block title %}Pochita S.A.{% endblock title %}</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        
+        <!-- Fuentes y CSS externos -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+        <!-- CSS personalizados -->
         <link rel="stylesheet" href="{% static 'styles/main.css' %}">
         <link rel="stylesheet" href="{% static 'styles/tablas.css' %}">
         {% block extra_head %}{% endblock extra_head %}
@@ -15,17 +20,33 @@
         <nav>
             <ul>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'profile' %}">Mi Perfil</a></li>
+                    <li><a href="{% url 'profile' %}">
+                        <i class="fas fa-user"></i> Mi Perfil
+                    </a></li>
                 {% endif %}
-                <li><a href="{% url 'list_appointments' %}">Citas</a></li>
-                <li><a href="{% url 'list_medical_records' %}">Historial Médico</a></li>
-                <li><a href="{% url 'list_inventory' %}">Inventario</a></li>
-                <li><a href="{% url 'list_invoices' %}">Facturación</a></li>
+                <li><a href="{% url 'list_appointments' %}">
+                    <i class="fas fa-calendar-alt"></i> Citas
+                </a></li>
+                <li><a href="{% url 'list_medical_records' %}">
+                    <i class="fas fa-notes-medical"></i> Historial Médico
+                </a></li>
+                <li><a href="{% url 'list_inventory' %}">
+                    <i class="fas fa-box"></i> Inventario
+                </a></li>
+                <li><a href="{% url 'list_invoices' %}">
+                    <i class="fas fa-file-invoice-dollar"></i> Facturación
+                </a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'logout' %}">Cerrar Sesión</a></li>
+                    <li><a href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </a></li>
                 {% else %}
-                    <li><a href="{% url 'login' %}">Iniciar Sesión</a></li>
-                    <li><a href="{% url 'register_client' %}">Registrarse</a></li>
+                    <li><a href="{% url 'login' %}">
+                        <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
+                    </a></li>
+                    <li><a href="{% url 'register_client' %}">
+                        <i class="fas fa-user-plus"></i> Registrarse
+                    </a></li>
                 {% endif %}
             </ul>
         </nav>
@@ -33,6 +54,17 @@
 
     <main>
         <h1>{% block heading %}Bienvenido a Pochita S.A.{% endblock heading %}</h1>
+        
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <div class="wrapper">
             {% block content %}
             {% endblock content %}
@@ -44,6 +76,12 @@
     </footer>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // Ocultar mensajes después de 5 segundos
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+    </script>
     {% block extra_scripts %}{% endblock extra_scripts %}
 </body>
 </html>

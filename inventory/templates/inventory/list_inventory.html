@@ -4,64 +4,91 @@
 {% block title %}Inventario{% endblock title %}
 
 {% block content %}
-<div class="table-container">
-    <div class="header-actions">
-        <h2>Inventario</h2>
-        {% if not is_client %}
-        <a href="{% url 'add_inventory' %}" class="btn-view">
-            <i class="fas fa-plus"></i> Agregar Nuevo Producto
-        </a>
-        {% endif %}
-    </div>
-
-    <table class="inventory-table">
-        <thead>
-            <tr>
-                <th>Imagen</th>
-                <th>Nombre</th>
-                <th>Stock</th>
-                <th>Proveedor</th>
-                <th>Categoría</th>
-                <th>Precio</th>
-                <th>Fecha de Expiración</th>
-                {% if not is_client %}
-                <th>Acciones</th>
-                {% endif %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in inventory %}
-            <tr>
-                <td data-label="Imagen" class="centered">
-                    {% if item.image %}
-                        <img src="{{ item.image.url }}" alt="{{ item.name }}" class="table-img">
-                    {% else %}
-                        <img src="{% static 'images/no-image.png' %}" alt="No imagen" class="table-img">
+<div class="page-wrapper">
+    <div class="table-container">
+        <div class="inventory-header">
+            <h2 class="inventory-title">Inventario</h2>
+            {% if not user.groups.all.0.name == 'Cliente' %}
+                <a href="{% url 'update_inventory' 0 %}" class="add-product-btn">
+                    <i class="fas fa-plus"></i>
+                    AGREGAR NUEVO PRODUCTO
+                </a>
+            {% endif %}
+        </div>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>IMAGEN</th>
+                    <th>NOMBRE</th>
+                    <th>DESCRIPCIÓN</th>
+                    <th>STOCK</th>
+                    <th>PROVEEDOR</th>
+                    <th>CATEGORÍA</th>
+                    <th>PRECIO</th>
+                    <th>FECHA DE EXPIRACIÓN</th>
+                    {% if not user.groups.all.0.name == 'Cliente' %}
+                        <th>ACCIONES</th>
                     {% endif %}
-                </td>
-                <td data-label="Nombre">{{ item.name }}</td>
-                <td data-label="Stock" class="number">
-                    <span class="stock-status {% if item.stock < 10 %}stock-low{% elif item.stock < 30 %}stock-medium{% else %}stock-good{% endif %}">
-                        {{ item.stock }}
-                    </span>
-                </td>
-                <td data-label="Proveedor">{{ item.supplier }}</td>
-                <td data-label="Categoría">{{ item.category }}</td>
-                <td data-label="Precio" class="number">${{ item.price }}</td>
-                <td data-label="Fecha de Expiración">{{ item.expiration_date }}</td>
-                {% if not is_client %}
-                <td data-label="Acciones" class="action-buttons">
-                    <a href="{% url 'update_inventory' item.id %}" class="btn-edit">Editar</a>
-                    <a href="{% url 'delete_inventory' item.id %}" class="btn-delete">Eliminar</a>
-                </td>
-                {% endif %}
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="8" class="text-center">No hay productos en el inventario.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in inventory %}
+                <tr>
+                    <td class="image-cell">
+                        {% if item.image %}
+                            <img src="{{ item.image.url }}" alt="{{ item.name }}" class="product-img">
+                        {% endif %}
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td class="description-cell">
+                        <div class="description-content collapsed" id="description-{{ item.id }}">
+                            {{ item.description }}
+                        </div>
+                        {% if item.description|length > 50 %}
+                            <button class="view-more-btn" onclick="toggleDescription('description-{{ item.id }}', this)">
+                                Ver más
+                            </button>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.stock }}</td>
+                    <td>{{ item.supplier }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>${{ item.price|floatformat:2 }}</td>
+                    <td>{{ item.expiration_date|date:"d/m/Y" }}</td>
+                    {% if not user.groups.all.0.name == 'Cliente' %}
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-edit" onclick="window.location.href='{% url "update_inventory" item.id %}'">
+                                    <i class="fas fa-edit"></i> Editar
+                                </button>
+                                <button class="btn-delete" onclick="window.location.href='{% url 'delete_inventory' item.id %}'">
+                                    <i class="fas fa-trash"></i> Eliminar
+                                </button>
+                            </div>
+                        </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
-{% endblock content %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+function toggleDescription(descriptionId, button) {
+    const description = document.getElementById(descriptionId);
+    if (description.classList.contains('collapsed')) {
+        description.classList.remove('collapsed');
+        description.classList.add('expanded');
+        button.textContent = 'Ver menos';
+    } else {
+        description.classList.remove('expanded');
+        description.classList.add('collapsed');
+        button.textContent = 'Ver más';
+    }
+}
+</script>
+{% endblock %}

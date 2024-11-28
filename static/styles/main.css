@@ -1,4 +1,3 @@
-
 /* Variables globales */
 :root {
     --primary-color: #4070f4;
@@ -207,3 +206,152 @@ nav ul li a:hover {
     transform: translateY(-1px);
 }
 
+/* Añade estos estilos en static/styles/tablas.css */
+
+.table-container {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.header-actions h2 {
+    color: #fff;
+    margin: 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #fff;
+}
+
+th {
+    background-color: rgba(64, 112, 244, 0.3);
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+tr:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+
+.image-cell {
+    width: 80px;
+}
+
+.product-img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background-color: #4070f4;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-edit:hover {
+    background-color: #2952c8;
+}
+
+.btn-delete:hover {
+    background-color: #bb2d3b;
+}
+
+.status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.low-stock {
+    color: #dc3545;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+    }
+    
+    .btn-edit, .btn-delete {
+        text-align: center;
+    }
+}
+
+header nav {
+    width: 100%;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+header nav ul li {
+    margin: 0;
+}
+
+header nav ul li a {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 10px 15px;
+    color: #fff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+header nav ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}

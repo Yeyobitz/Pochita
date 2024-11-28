@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agregar Producto{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/tablas.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="dark-container">
+    <div class="form-header">
+        <h2>Agregar Producto</h2>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" class="dark-form">
+        {% csrf_token %}
+        
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-box"></i>
+                        Nombre del Producto
+                    </label>
+                    <input type="text" name="name" placeholder="Ingrese el nombre del producto" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-cubes"></i>
+                        Stock
+                    </label>
+                    <input type="number" name="stock" placeholder="Cantidad disponible" min="0" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-truck"></i>
+                        Proveedor
+                    </label>
+                    <input type="text" name="supplier" placeholder="Nombre del proveedor" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-tags"></i>
+                        Categoría
+                    </label>
+                    <input type="text" name="category" placeholder="Categoría del producto" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="form-row">
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-dollar-sign"></i>
+                        Precio
+                    </label>
+                    <input type="number" step="0.01" name="price" placeholder="0.00" min="0" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>
+                        <i class="fas fa-calendar"></i>
+                        Fecha de Expiración
+                    </label>
+                    <input type="date" name="expiration_date" required>
+                </div>
+            </div>
+        </div>
+
+        <div class="image-section">
+            <label>
+                <i class="fas fa-image"></i>
+                Imagen del Producto
+            </label>
+            <div class="image-upload">
+                <input type="file" name="image" accept="image/*">
+            </div>
+        </div>
+
+        <div class="description-section">
+            <label>
+                <i class="fas fa-align-left"></i>
+                Descripción
+            </label>
+            <textarea name="description"></textarea>
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-primary">
+                <i class="fas fa-plus"></i>
+                Agregar Producto
+            </button>
+            <a href="{% url 'list_inventory' %}" class="btn-secondary">
+                <i class="fas fa-times"></i>
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}
