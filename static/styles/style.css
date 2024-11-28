@@ -228,69 +228,69 @@ header, nav {
   z-index: 2;
 }
 
-/* Estilos para tablas y contenido existente se mantienen igual */
-
-/* Nuevos estilos para la barra de navegación */
-header {
-  background-color: #000000;
-  padding: 1rem 0;
-  width: 100%;
-  position: fixed;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* Estilos generales de la página */
+.page-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 20px;
+/* Título principal */
+h1 {
+    color: white;
+    margin-bottom: 30px;
 }
 
-nav ul li a {
-  color: #ffffff;
-  text-decoration: none;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
-  padding: 8px 15px;
-  border-radius: 5px;
-  display: inline-block;
+/* Mensaje de éxito */
+.success-message {
+    background-color: #28a745;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    animation: fadeOut 5s forwards;
 }
 
-nav ul li a:hover {
-  color: #4070f4;
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: translateY(-2px);
+@keyframes fadeOut {
+    0% { opacity: 1; }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
 }
 
-main {
-  margin-top: 80px;
-  padding: 20px;
+/* Contenedor de la tabla */
+.table-container {
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 10px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Media queries para diseño responsive */
-@media (max-width: 768px) {
-  nav ul {
-      flex-direction: column;
-      align-items: center;
-      padding: 10px;
-  }
+/* Encabezado del inventario */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: rgba(64, 112, 244, 0.3);
+    border-radius: 8px;
+}
 
-  nav ul li {
-      width: 100%;
-      text-align: center;
-  }
+.inventory-header h2 {
+    color: white;
+    margin: 0;
+}
 
-  nav ul li a {
-      display: block;
-      padding: 10px;
-  }
+.add-product-btn {
+    background: #4070f4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
 
-  main {
-      margin-top: 120px;
-  }
+.add-product-btn:hover {
+    background: #2952c8;
 }
