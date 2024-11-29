@@ -30,9 +30,6 @@ settings_local.py
 # Media files (user uploaded content)
 media/
 
-# Static files (can be generated)
-staticfiles/
-static/
 
 # Unit test / coverage reports
 coverage/

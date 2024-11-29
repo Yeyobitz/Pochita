@@ -1,0 +1,93 @@
+/* Contenedor principal - igual que en profile */
+.table-container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 800px;
+    margin: 80px auto 20px; /* Añadido margen superior para centrar mejor */
+    color: #fff;
+    position: relative; /* Para posicionamiento correcto */
+}
+
+/* Estilo del título principal */
+.header-actions {
+    margin-bottom: 20px;
+}
+
+.header-actions h2 {
+    color: #4070f4;
+    border-bottom: 2px solid #4070f4;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* Botón de nueva cita */
+.btn-view {
+    display: inline-block;
+    background: #4070f4;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-bottom: 20px;
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead th {
+    text-align: left;
+    padding: 12px;
+    background: rgba(64, 112, 244, 0.2);
+    color: #fff;
+}
+
+tbody td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Estados */
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.status-scheduled {
+    color: #4ade80;
+}
+
+.status-cancelled {
+    color: #ff4f4f;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit, .btn-cancel {
+    padding: 5px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.btn-edit {
+    background: #4070f4;
+    color: white;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+}
