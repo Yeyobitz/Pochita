@@ -28,8 +28,9 @@ settings_local.py
 .env
 
 # Media files (user uploaded content)
-media/
 
+# Static files (can be generated)
+staticfiles/
 
 # Unit test / coverage reports
 coverage/
