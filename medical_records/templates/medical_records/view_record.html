@@ -3,18 +3,57 @@
 
 {% block title %}Detalle del Registro Médico{% endblock title %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'styles/record_details.css' %}">
+{% endblock extra_css %}
+
 {% block heading %}Detalle del Registro Médico{% endblock heading %}
 
 {% block content %}
-<h2>Registro Médico de {{ record.pet_name }}</h2>
-<p><strong>Cliente:</strong> {{ record.client.name }}</p>
-<p><strong>Diagnóstico:</strong> {{ record.diagnosis }}</p>
-<p><strong>Tratamiento:</strong> {{ record.treatment }}</p>
-{% if record.prescription %}
-<p><strong>Prescripción:</strong> {{ record.prescription }}</p>
-{% endif %}
-{% if record.notes %}
-<p><strong>Notas:</strong> {{ record.notes }}</p>
-{% endif %}
-<a href="{% url 'list_medical_records' %}">Volver al Historial Médico</a>
+<div class="dark-container">
+    <div class="form-header">
+        <h2>Registro Médico de {{ record.pet.name }}</h2>
+    </div>
+    
+    <div class="form-section">
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-user"></i>Cliente</label>
+                <div class="info-text">{{ record.client.name }}</div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-stethoscope"></i>Diagnóstico</label>
+                <div class="info-text">{{ record.diagnosis }}</div>
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group">
+                <label><i class="fas fa-pills"></i>Tratamiento</label>
+                <div class="info-text">{{ record.treatment }}</div>
+            </div>
+            {% if record.prescription %}
+            <div class="form-group">
+                <label><i class="fas fa-prescription"></i>Prescripción</label>
+                <div class="info-text">{{ record.prescription }}</div>
+            </div>
+            {% endif %}
+        </div>
+        
+        {% if record.notes %}
+        <div class="form-row full-width">
+            <div class="form-group">
+                <label><i class="fas fa-sticky-note"></i>Notas</label>
+                <div class="info-text">{{ record.notes }}</div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form-buttons">
+        <a href="{% url 'list_medical_records' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Volver al Historial Médico
+        </a>
+    </div>
+</div>
 {% endblock content %}
