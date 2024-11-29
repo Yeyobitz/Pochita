@@ -1,0 +1,120 @@
+.form-container {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 30px;
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 800px;
+    margin: 80px auto 20px;
+    color: #fff;
+}
+
+/* Encabezado del formulario */
+.form-header h2 {
+    color: #4070f4;
+    border-bottom: 2px solid #4070f4;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #fff;
+    font-size: 0.95em;
+}
+
+/* Estilos para inputs y selects */
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1em;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #4070f4;
+    box-shadow: 0 0 0 2px rgba(64, 112, 244, 0.2);
+}
+
+/* Estilos específicos para select */
+select.form-control {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='white' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    padding-right: 30px;
+}
+
+select.form-control option {
+    background: #333;
+    color: white;
+}
+
+/* Estilos para inputs de fecha y hora */
+input[type="date"].form-control,
+input[type="time"].form-control {
+    padding: 8px 12px;
+}
+
+/* Contenedor de botones */
+.form-buttons {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+/* Estilos de botones */
+.btn-save,
+.btn-cancel {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    font-size: 1em;
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-save {
+    background: #4070f4;
+    color: white;
+    flex: 1;
+}
+
+.btn-save:hover {
+    background: #3060e0;
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: white;
+    flex: 1;
+}
+
+.btn-cancel:hover {
+    background: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+}

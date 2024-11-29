@@ -1,0 +1,91 @@
+.pet-section {
+    display: none;
+}
+
+.nav-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    gap: 2px;
+}
+
+.progress-indicator {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.step {
+    display: inline-block;
+    margin: 0 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ddd;
+}
+
+.step.active {
+    background: #4070f4;
+}
+
+
+.nav-buttons button {
+    flex: 1;
+    min-width: 85px;
+    font-size: 12px;
+    white-space: nowrap;
+    padding: 0 6px;
+}
+
+.register {
+    text-align: center;
+    margin-top: 15px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.register p {
+    margin: 0;
+    font-size: 0.9em;
+}
+
+/* File input specific styling */
+.input-field.file-field {
+    margin-top: 30px;
+}
+
+.input-field.file-field label {
+    position: absolute;
+    top: -25px;
+    left: 0;
+    color: #ffff;
+    font-size: 14px;
+}
+
+.input-field.file-field input[type="file"] {
+    margin-top: 5px;
+    padding: 8px 0;
+    color: #ffff;
+}
+
+.register a {
+    color: #ffff;
+    text-decoration: none;
+}
+
+.register a:hover {
+    text-decoration: underline;
+}
+
+#addPetBtn {
+font-size: 14px;
+min-width: 140px; /* Increased from 120px */
+white-space: nowrap; /* Prevents text wrapping */
+padding: 0 15px; /* Slightly reduced padding */
+}
+
+.nav-buttons #addPetBtn {
+font-size: 10px !important;
+padding: 0 4px !important;
+min-width: 80px;
+}

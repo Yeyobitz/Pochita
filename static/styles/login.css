@@ -1,0 +1,8 @@
+.register a {
+    color: #ffff;
+    text-decoration: none;
+}
+    
+.register a:hover {
+    text-decoration: underline;
+}
