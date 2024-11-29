@@ -1,0 +1,1067 @@
+/* Variables globales mejoradas */
+:root {
+    --primary-color: #4070f4;
+    --primary-gradient: linear-gradient(135deg, #4070f4 0%, #2d5cde 100%);
+    --dark-bg: #0f1117;
+    --card-bg: rgba(25, 25, 30, 0.98);
+    --border: rgba(255, 255, 255, 0.08);
+    --success: #00c853;
+    --warning: #ffd600;
+    --danger: #ff3d00;
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilos base mejorados */
+body {
+    background: var(--dark-bg);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    color: var(--text-primary);
+    line-height: 1.6;
+}
+
+/* Contenedor principal */
+.page-wrapper {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Contenedor de la tabla */
+.table-container {
+    background: rgba(17, 25, 40, 0.95);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 24px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+/* Encabezado del inventario */
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.inventory-title {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.add-product-btn {
+    background: #4070f4;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.add-product-btn:hover {
+    background: #2952c8;
+    transform: translateY(-1px);
+}
+
+/* Tabla */
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+thead th {
+    background: rgba(64, 112, 244, 0.1);
+    color: #fff;
+    font-weight: 600;
+    padding: 16px;
+    text-align: left;
+    font-size: 0.9rem;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid rgba(64, 112, 244, 0.3);
+}
+
+tbody td {
+    padding: 16px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+/* Columnas específicas */
+.image-cell img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.description-cell {
+    max-width: 300px;
+}
+
+.description-content {
+    transition: all 0.3s ease;
+    overflow: hidden;
+    line-height: 1.5;
+}
+
+.description-content.collapsed {
+    max-height: 24px;
+}
+
+.description-content.expanded {
+    max-height: 1000px;
+}
+
+/* Botones de acción */
+.action-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn-edit, .btn-delete {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-edit {
+    background: #4070f4;
+    color: white;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-edit:hover, .btn-delete:hover {
+    transform: translateY(-1px);
+    filter: brightness(110%);
+}
+
+.view-more-btn {
+    background: transparent;
+    color: #4070f4;
+    border: 1px solid #4070f4;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: all 0.3s ease;
+}
+
+.view-more-btn:hover {
+    background: rgba(64, 112, 244, 0.1);
+}
+
+/* Modal */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #1a1a1a;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+}
+
+/* Responsive */
+@media screen and (max-width: 1200px) {
+    .table-container {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 1000px;
+    }
+}
+
+/* Estilos para el formulario de inventario */
+.form-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.form-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.form-header h2 {
+    color: #333;
+    font-size: 1.8rem;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    flex: 1;
+    margin-bottom: 2rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group label i {
+    margin-right: 0.5rem;
+    color: #4070f4;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: #4070f4;
+    outline: none;
+    box-shadow: 0 0 5px rgba(64, 112, 244, 0.3);
+}
+
+.image-upload-container {
+    margin-top: 0.5rem;
+}
+
+.current-image {
+    margin-top: 1rem;
+    text-align: center;
+}
+
+.current-image img {
+    max-width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.current-image span {
+    display: block;
+    margin-top: 0.5rem;
+    color: #666;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.btn-save {
+    background-color: #4070f4;
+    color: white;
+}
+
+.btn-save:hover {
+    background-color: #2f5cd3;
+    transform: translateY(-2px);
+}
+
+.btn-cancel {
+    background-color: #dc3545;
+    color: white;
+    text-decoration: none;
+}
+
+.btn-cancel:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+.dark-container {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #1a1a1a;
+    border-radius: 15px;
+}
+
+.form-header {
+    margin-bottom: 3rem;
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1.5rem;
+}
+
+.form-header h2 {
+    color: #fff;
+    font-size: 2rem;
+    margin: 0;
+}
+
+.form-section {
+    margin-bottom: 2.5rem;
+    padding: 1.5rem;
+    background: #222;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    align-items: stretch;
+}
+
+.form-group {
+    flex: 1;
+    position: relative;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.form-group label i {
+    color: #4070f4;
+    width: 20px;
+    font-size: 1.2rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #5c8af5;
+    outline: none;
+    box-shadow: 0 0 10px rgba(64, 112, 244, 0.2);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #666;
+}
+
+.image-upload {
+    background: #2d2d2d;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 2px dashed #3d3d3d;
+    text-align: center;
+}
+
+.form-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #333;
+}
+
+.btn-primary,
+.btn-secondary {
+    padding: 1rem 2rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: #4070f4;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #2f5cd3;
+    transform: translateY(-2px);
+}
+
+.btn-secondary {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+    .dark-container {
+        margin: 1.5rem;
+        padding: 1.5rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-group {
+        min-width: 100%;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-primary,
+    .btn-secondary {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Actualizar los estilos de los campos del formulario */
+.form-row {
+    display: flex;
+    gap: 2rem;
+    margin-bottom: 3%;
+    position: relative;
+    align-items: center;
+}
+
+.form-group {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.5rem 1rem;
+    position: relative;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: #fff;
+    font-weight: 500;
+    font-size: 1.1rem;
+    background: #1a1a1a;
+    padding: 0.5rem;
+    border-radius: 5px;
+}
+
+.form-group label i {
+    color: #4070f4;
+    width: 20px;
+    font-size: 1.2rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    border-color: #5c8af5;
+    outline: none;
+    box-shadow: 0 0 15px rgba(64, 112, 244, 0.3);
+}
+
+/* Agregar líneas divisorias entre secciones */
+.form-section {
+    margin-bottom: 2.5rem;
+    padding: 2rem;
+    background: #222;
+    border-radius: 10px;
+    border: 1px solid #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.form-section:not(:last-child) {
+    border-bottom: 2px solid #333;
+}
+
+/* Mejorar la visualización de los campos en línea */
+.form-row {
+    position: relative;
+    padding: 0 1rem;
+}
+
+.form-row::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 80%;
+    width: 1px;
+    background: #4070f4;
+    transform: translate(-50%, -50%);
+    opacity: 0.6;
+}
+
+/* Evitar que la línea aparezca en ciertos elementos */
+.form-row:last-child::after,
+.form-row.no-divider::after,
+.form-row:has(.full-width)::after {
+    display: none;
+}
+
+/* Ajustar el espaciado entre elementos */
+.form-group + .form-group {
+    margin-left: 2rem;
+}
+
+/* Estilo para el campo de fecha */
+input[type="date"] {
+    border-color: #4070f4;
+    padding: 0.9rem;
+}
+
+/* Estilo para el campo de número */
+input[type="number"] {
+    border-color: #4070f4;
+}
+
+/* Mejorar la visualización del área de carga de imagen */
+.image-upload {
+    background: #2d2d2d;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px dashed #4070f4;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+/* Ajustar el estilo de los botones */
+.form-buttons {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 2px solid #333;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 768px) {
+    .form-row::after {
+        display: none;
+    }
+    
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}
+
+.form-row::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    height: 100%;
+    width: 1px;
+    background: #4070f4;
+    transform: translateX(-50%);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.form-group {
+    flex: 1;
+    position: relative;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.image-upload,
+.description-area {
+    width: 100%;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    background: #2d2d2d;
+}
+
+.form-row.full-width::after {
+    display: none;
+}
+
+.form-row.full-width {
+    display: block;
+    width: 100%;
+}
+
+input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: none;
+    background: transparent;
+    color: #fff;
+}
+
+.validation-message {
+    position: absolute;
+    background: #2d2d2d;
+    border: 1px solid #4070f4;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
+    color: #fff;
+    z-index: 1;
+    pointer-events: none;
+}
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .form-row::after {
+        display: none;
+    }
+
+    .form-group {
+        width: 100%;
+    }
+}
+
+/* Estilos para la sección de imagen y descripción */
+.form-group.full-width {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* Estilo para el campo de imagen */
+.image-upload {
+    width: 100%;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+.image-upload input[type="file"] {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para el botón de seleccionar archivo */
+.image-upload input[type="file"]::file-selector-button {
+    height: 40px;
+    padding: 0 15px;
+    margin: 0 10px;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+/* Hover estado del botón */
+.image-upload input[type="file"]::file-selector-button:hover {
+    background: #404040;
+}
+
+/* Ajuste del input file */
+.image-upload input[type="file"] {
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para el campo de descripción */
+.form-group textarea {
+    width: 100%;
+    min-height: 100px;
+    padding: 1rem;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+    resize: vertical;
+    margin-top: 0.5rem;
+}
+
+/* Estilos comunes para las etiquetas */
+.form-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+    font-weight: 500;
+}
+
+.form-group label i {
+    color: #4070f4;
+    width: 20px;
+}
+
+/* Ajuste para el texto de "Ningún archivo seleccionado" */
+.file-input-text {
+    color: #666;
+    margin-left: 0.5rem;
+}
+
+/* Ajuste general para todos los campos */
+.form-group {
+    flex: 1;
+    margin-bottom: 2rem;
+}
+
+/* Estilos específicos para imagen y descripción */
+.image-upload,
+textarea {
+    width: 100%;
+    padding: 0.75rem; /* Mismo padding que los otros inputs */
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+}
+
+/* Ajuste del contenedor de imagen */
+.image-upload {
+    display: flex;
+    align-items: center;
+    height: 45px; /* Altura similar a los otros inputs */
+}
+
+/* Ajuste del input de archivo */
+.image-upload input[type="file"] {
+    padding: 0.375rem;
+    color: #fff;
+}
+
+/* Ajuste del área de descripción */
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Ajuste de los márgenes entre secciones */
+.form-group:not(:last-child) {
+    margin-bottom: 1.5rem;
+}
+
+/* Asegurar consistencia en los bordes */
+.form-group input,
+.form-group textarea,
+.image-upload {
+    border-width: 2px;
+    border-style: solid;
+    border-color: #4070f4;
+}
+
+/* Estilo base para todos los inputs */
+.form-group input,
+.form-group textarea,
+.image-upload {
+    width: 100%;
+    height: 45px; /* Altura fija igual para todos los campos */
+    padding: 0.75rem;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1rem;
+}
+
+/* Ajuste específico para el input de imagen */
+.image-upload {
+    display: flex;
+    align-items: center;
+    background: #2d2d2d;
+}
+
+.image-upload input[type="file"] {
+    height: 100%;
+    border: none;
+    padding: 0.375rem;
+    background: transparent;
+}
+
+/* Ajuste para el campo de descripción */
+.form-group textarea {
+    height: 45px; /* Misma altura que los demás campos */
+    resize: none; /* Evita que se pueda redimensionar */
+}
+
+/* Espaciado consistente entre grupos */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+/* Asegurar que el texto dentro de los inputs esté centrado verticalmente */
+.form-group input,
+.form-group textarea {
+    line-height: normal;
+    display: flex;
+    align-items: center;
+}
+
+/* Contenedor principal (el que tiene el borde azul) */
+.image-section {
+    width: 30%;
+    margin: 1rem auto;
+}
+
+.image-container {
+    width: 100%;
+    height: 90px; /* Aumentado de 70px a 90px */
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    padding: 20px; /* Aumentado el padding */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+/* Contenedor del input de archivo */
+.image-upload {
+    width: 100%;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    background: #2d2d2d;
+    padding: 8px;
+    box-sizing: border-box;
+}
+
+.image-upload input[type="file"]::file-selector-button {
+    height: 35px;
+    padding: 0 12px;
+    margin: 0 8px;
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    color: #fff;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+/* Contenedor de la sección de imagen */
+.image-section {
+    width: 100%;
+    margin-bottom: 1.5rem; /* Espacio consistente con otros campos */
+}
+
+/* Contenedor principal con borde azul */
+.image-container {
+    width: 100%;
+    height: 45px; /* Mismo alto que los otros inputs */
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    padding: 8px 12px; /* Padding consistente con otros campos */
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+}
+
+/* Ajuste del input de archivo */
+.image-upload {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    background: transparent;
+}
+
+.image-upload input[type="file"] {
+    height: 35px;
+    padding: 0 8px;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+/* Estilo para la etiqueta */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.form-label i {
+    color: #4070f4;
+}
+
+/* Contenedor de la sección de descripción */
+.description-section {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+/* Contenedor del textarea de descripción */
+.description-container {
+    width: 100%;
+    height: 45px; /* Mismo alto que los otros inputs */
+    background: #2d2d2d;
+    border: 2px solid #4070f4;
+    border-radius: 8px;
+    padding: 8px 12px;
+    box-sizing: border-box;
+}
+
+/* Estilo para el textarea */
+.description-container textarea {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 0.9rem;
+    resize: none;
+    padding: 0;
+}
+
+/* Estilo para la etiqueta de descripción */
+.form-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.form-label i {
+    color: #4070f4;
+}
+
+
