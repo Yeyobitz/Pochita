@@ -33,12 +33,14 @@ def create_invoice(request):
         amount = request.POST.get('amount')
         payment_status = request.POST.get('payment_status', 'unpaid')
         
+        # Verificar permisos para marcar como pagado
         if payment_status == 'paid' and not (
             request.user.is_superuser or 
             request.user.groups.filter(name='Veterinario').exists()
         ):
             payment_status = 'unpaid'
         
+        # Verificar que todos los campos necesarios estén presentes
         if all([patient_id, service, amount]):
             try:
                 patient = get_object_or_404(Client, id=patient_id)
@@ -56,7 +58,14 @@ def create_invoice(request):
         else:
             messages.error(request, 'Por favor complete todos los campos.')
     
-    patients = Client.objects.all()
+    # Obtener lista de pacientes con sus datos de usuario
+    patients = Client.objects.select_related('user').all()
+    
+    # Debug: Imprimir información de los pacientes
+    for patient in patients:
+        print(f"Patient ID: {patient.id}")
+        print(f"Patient user: {patient.user.get_full_name() or patient.user.username}")
+    
     context = {
         'patients': patients,
         'is_staff': request.user.is_superuser or request.user.groups.filter(name='Veterinario').exists()

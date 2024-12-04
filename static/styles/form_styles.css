@@ -1,0 +1,201 @@
+/* Variables globales */
+:root {
+    --primary-color: #4070f4;
+    --dark-bg: #1a1a1a;
+    --input-bg: #2d2d2d;
+    --border-color: #4070f4;
+    --text-color: #fff;
+}
+
+/* Contenedor principal */
+.dark-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 3rem;
+    background: var(--dark-bg);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
+}
+
+/* Encabezado del formulario */
+.form-header {
+    margin-bottom: 2rem;
+    text-align: center;
+    border-bottom: 2px solid #333;
+    padding-bottom: 1rem;
+}
+
+.form-header h2 {
+    color: var(--text-color);
+    font-size: 2rem;
+    margin: 0;
+}
+
+/* Filas del formulario */
+.form-row {
+    display: flex;
+    gap: 3rem;
+    margin-bottom: 2rem;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+
+/* Grupos de formulario */
+.form-group {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    background: var(--dark-bg);
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.form-group label i {
+    color: var(--primary-color);
+    margin-right: 0.5rem;
+    width: auto;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* Campos de entrada */
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 1rem;
+    min-height: 45px;
+    background: var(--input-bg);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+/* Ajuste específico para inputs de tipo fecha */
+.form-group input[type="date"] {
+    padding-right: 0.5rem;
+}
+
+/* Sección de imagen */
+.image-upload {
+    background: var(--input-bg);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    border-radius: 8px;
+    border: 2px dashed var(--border-color);
+    text-align: center;
+    position: relative;
+    z-index: 2;
+}
+
+.current-image {
+    margin: 1rem 0;
+    text-align: center;
+    background: var(--dark-bg);
+    padding: 1rem;
+    border-radius: 8px;
+}
+
+.current-image img {
+    max-width: 150px;
+    border-radius: 8px;
+    display: block;
+    margin: 0 auto;
+}
+
+/* Botones */
+.form-buttons {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: flex-end;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 2px solid #333;
+    clear: both;
+    position: relative;
+    z-index: 2;
+}
+
+.btn-save,
+.btn-cancel {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-save {
+    background: var(--primary-color);
+    color: var(--text-color);
+}
+
+.btn-cancel {
+    background: #dc3545;
+    color: var(--text-color);
+}
+
+.btn-save:hover,
+.btn-cancel:hover {
+    transform: translateY(-2px);
+    filter: brightness(110%);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dark-container {
+        margin: 1rem;
+        padding: 1rem;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .form-buttons {
+        flex-direction: column;
+    }
+
+    .btn-save,
+    .btn-cancel {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* Ajuste para textos largos */
+.form-group label span {
+    display: inline-block;
+    vertical-align: middle;
+    max-width: calc(100% - 30px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Ajuste para inputs numéricos */
+.form-group input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+.form-group input[type="number"]::-webkit-outer-spin-button,
+.form-group input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}

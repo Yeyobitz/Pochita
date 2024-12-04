@@ -2,15 +2,39 @@
 {% load static %}
 
 {% block title %}Detalle de la Factura{% endblock title %}
-
-{% block heading %}Detalle de la Factura{% endblock heading %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/tablas.css' %}">
+{% endblock extra_head %}
 
 {% block content %}
-<h2>Factura N° {{ invoice.id }}</h2>
-<p><strong>Cliente:</strong> {{ invoice.client.name }}</p>
-<p><strong>Fecha:</strong> {{ invoice.date }}</p>
-<p><strong>Total:</strong> ${{ invoice.total_amount }}</p>
-<p><strong>Items:</strong></p>
-<p>{{ invoice.items }}</p>
-<a href="{% url 'list_invoices' %}">Volver al Listado de Facturas</a>
+<div class="table-container">
+    <div class="header-actions">
+        <h2>Factura N° {{ invoice.id }}</h2>
+    </div>
+
+    <table>
+        <tbody>
+            <tr>
+                <td><strong>Cliente:</strong></td>
+                <td>{{ invoice.client.name }}</td>
+            </tr>
+            <tr>
+                <td><strong>Fecha:</strong></td>
+                <td>{{ invoice.date }}</td>
+            </tr>
+            <tr>
+                <td><strong>Total:</strong></td>
+                <td>${{ invoice.total_amount }}</td>
+            </tr>
+            <tr>
+                <td><strong>Items:</strong></td>
+                <td>{{ invoice.items }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="form-buttons">
+        <a href="{% url 'list_invoices' %}" class="btn-view">Volver al Listado</a>
+    </div>
+</div>
 {% endblock content %}

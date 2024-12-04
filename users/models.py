@@ -11,9 +11,23 @@ class Client(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    @property
+    def full_name(self):
+        """Retorna el nombre del cliente"""
+        return self.name
+
+    def get_full_name(self):
+        """Método alternativo para obtener el nombre completo"""
+        return self.name
+
     def __str__(self):
         return self.name
-    
+
+    class Meta:
+        verbose_name = "Cliente"
+        verbose_name_plural = "Clientes"
+        ordering = ['-created_at']  # Ordena por fecha de creación, más reciente primero
+
 class Pet(models.Model):
     id = models.AutoField(primary_key=True)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)

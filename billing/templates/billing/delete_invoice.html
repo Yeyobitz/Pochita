@@ -2,10 +2,13 @@
 {% load static %}
 
 {% block title %}Eliminar Factura{% endblock title %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'styles/tablas.css' %}">
+{% endblock extra_head %}
 
 {% block content %}
-<div class="form-container">
-    <div class="form-header">
+<div class="table-container">
+    <div class="header-actions">
         <h2>Confirmar Eliminación</h2>
     </div>
     
@@ -17,8 +20,8 @@
     <form method="post">
         {% csrf_token %}
         <div class="form-buttons">
-            <button type="submit" class="btn-delete">Confirmar Eliminación</button>
-            <a href="{% url 'list_invoices' %}" class="btn-cancel">Cancelar</a>
+            <button type="submit" class="btn-cancel" style="background-color: #dc3545; color: white;">Confirmar Eliminación</button>
+            <a href="{% url 'list_invoices' %}" class="btn-view">Cancelar</a>
         </div>
     </form>
 </div>

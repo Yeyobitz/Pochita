@@ -21,10 +21,10 @@
         <div class="form-group">
             <label for="id_vet">Veterinario:</label>
             <select name="vet" id="id_vet" class="form-control" required>
-                <option value="{{ appointment.vet.id }}" selected>{{ appointment.vet.username }}</option>
+                <option value="{{ appointment.vet.id }}" selected>{{ appointment.vet.name }}</option>
                 {% for vet in vets %}
                     {% if vet.id != appointment.vet.id %}
-                        <option value="{{ vet.id }}">{{ vet.username }}</option>
+                        <option value="{{ vet.id }}">{{ vet.name }}</option>
                     {% endif %}
                 {% endfor %}
             </select>
@@ -33,10 +33,10 @@
         <div class="form-group">
             <label for="id_pet">Mascota:</label>
             <select name="pet" id="id_pet" class="form-control" required>
-                <option value="{{ appointment.pet.id }}" selected>{{ appointment.pet.name }}</option>
+                <option value="{{ appointment.pet.id }}" selected>{{ appointment.pet.name }} ({{ appointment.pet.client.name }})</option>
                 {% for pet in pets %}
                     {% if pet.id != appointment.pet.id %}
-                        <option value="{{ pet.id }}">{{ pet.name }}</option>
+                        <option value="{{ pet.id }}">{{ pet.name }} ({{ pet.client.name }})</option>
                     {% endif %}
                 {% endfor %}
             </select>
