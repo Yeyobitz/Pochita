@@ -7,6 +7,22 @@
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'styles/style.css' %}">
 <link rel="stylesheet" href="{% static 'styles/register.css' %}">
+<style>
+.error-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+    display: none;
+}
+
+.input-field.error input {
+    border-color: #dc3545;
+}
+
+.input-field.error .error-feedback {
+    display: block;
+}
+</style>
 {% endblock extra_head %}
 
 {% block heading %}{% endblock heading %}
@@ -29,13 +45,15 @@
             </div>
             
             <div class="input-field">
-                <input type="text" name="username" required>
+                <input type="text" name="username" id="username" required>
                 <label>Usuario</label>
+                <div class="error-feedback" id="username-error"></div>
             </div>
         
             <div class="input-field">
-                <input type="email" name="email" required>
+                <input type="email" name="email" id="email" required>
                 <label>Correo electrónico</label>
+                <div class="error-feedback" id="email-error"></div>
             </div>
             
             <div class="input-field">
@@ -302,6 +320,63 @@
         petSection.hide();
         userSection.show();
         steps.eq(1).removeClass('active');
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const usernameInput = document.getElementById('username');
+    const emailInput = document.getElementById('email');
+    let usernameTimeout = null;
+    let emailTimeout = null;
+
+    function validateUsername() {
+        const username = usernameInput.value;
+        if (username.length < 1) return;
+
+        fetch(`/users/validate_username/?username=${username}`)
+            .then(response => response.json())
+            .then(data => {
+                const parentDiv = usernameInput.parentElement;
+                const errorDiv = document.getElementById('username-error');
+                
+                if (data.is_taken) {
+                    parentDiv.classList.add('error');
+                    errorDiv.textContent = 'Este nombre de usuario ya está en uso';
+                } else {
+                    parentDiv.classList.remove('error');
+                    errorDiv.textContent = '';
+                }
+            });
+    }
+
+    function validateEmail() {
+        const email = emailInput.value;
+        if (email.length < 1) return;
+
+        fetch(`/users/validate_email/?email=${email}`)
+            .then(response => response.json())
+            .then(data => {
+                const parentDiv = emailInput.parentElement;
+                const errorDiv = document.getElementById('email-error');
+                
+                if (data.is_taken) {
+                    parentDiv.classList.add('error');
+                    errorDiv.textContent = 'Este correo electrónico ya está registrado';
+                } else {
+                    parentDiv.classList.remove('error');
+                    errorDiv.textContent = '';
+                }
+            });
+    }
+
+    usernameInput.addEventListener('input', function() {
+        clearTimeout(usernameTimeout);
+        usernameTimeout = setTimeout(validateUsername, 500);
+    });
+
+    emailInput.addEventListener('input', function() {
+        clearTimeout(emailTimeout);
+        emailTimeout = setTimeout(validateEmail, 500);
     });
 });
 
