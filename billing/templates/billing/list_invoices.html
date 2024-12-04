@@ -37,14 +37,12 @@
                 </td>
                 <td data-label="Acciones" class="action-buttons">
                     <a href="{% url 'view_invoice' invoice.pk %}" class="btn-view">Ver Detalles</a>
-                    {% with is_vet=user.groups.all|join:"," %}
-                        {% if 'Veterinario' in is_vet %}
-                            <a href="{% url 'delete_invoice' invoice.pk %}" class="btn-delete" 
-                               onclick="return confirm('¿Está seguro que desea eliminar esta factura?')">
-                                <i class="fas fa-trash"></i> Eliminar
-                            </a>
-                        {% endif %}
-                    {% endwith %}
+                    {% if user.is_superuser or user.groups.all.0.name == 'Veterinario' %}
+                        <a href="{% url 'delete_invoice' invoice.pk %}" class="btn-delete" 
+                           onclick="return confirm('¿Está seguro que desea eliminar esta factura?')">
+                            <i class="fas fa-trash"></i> Eliminar
+                        </a>
+                    {% endif %}
                 </td>
             </tr>
             {% empty %}

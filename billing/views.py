@@ -64,7 +64,7 @@ def create_invoice(request):
     return render(request, 'billing/create_invoice.html', context)
 
 @login_required
-@user_passes_test(lambda u: u.groups.filter(name='Veterinario').exists())
+@user_passes_test(lambda u: u.is_superuser or u.groups.filter(name='Veterinario').exists())
 def delete_invoice(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
     
