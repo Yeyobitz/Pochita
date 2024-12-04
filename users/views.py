@@ -60,3 +60,17 @@ def custom_logout(request):
 @login_required
 def profile_view(request):
     return render(request, 'users/profile.html')
+
+def validate_username(request):
+    username = request.GET.get('username', None)
+    response = {
+        'is_taken': User.objects.filter(username=username).exists()
+    }
+    return JsonResponse(response)
+
+def validate_email(request):
+    email = request.GET.get('email', None)
+    response = {
+        'is_taken': User.objects.filter(email=email).exists()
+    }
+    return JsonResponse(response)
