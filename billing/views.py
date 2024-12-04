@@ -1,33 +1,38 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
-from django.utils import timezone
-from .models import Invoice
-from users.models import Client
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
+from users.models import Client
+from .models import Invoice
+from django.utils import timezone
 
-# Listar facturas (modificado para filtrar por cliente)
+def is_not_client(user):
+    return not user.groups.filter(name='Cliente').exists()
+
 @login_required
 def list_invoices(request):
-    if request.user.groups.filter(name='Cliente').exists():  # Si es cliente
-        invoices = Invoice.objects.filter(client=request.user.client).order_by('-date')
-    else:  # Si es administrador o personal interno
-        invoices = Invoice.objects.all().order_by('-date')
+    if request.user.groups.filter(name='Cliente').exists():
+        invoices = Invoice.objects.filter(client__user=request.user)
+    else:
+        invoices = Invoice.objects.all()
     return render(request, 'billing/list_invoices.html', {'invoices': invoices})
 
-# Crear factura
 @login_required
-def create_invoice(request):
-    if request.user.groups.filter(name='Cliente').exists():
+def view_invoice(request, pk):
+    invoice = get_object_or_404(Invoice, pk=pk)
+    if request.user.groups.filter(name='Cliente').exists() and invoice.client.user != request.user:
+        messages.error(request, 'No tienes permiso para ver esta factura.')
         return redirect('list_invoices')
-    
+    return render(request, 'billing/view_invoice.html', {'invoice': invoice})
+
+@login_required
+@user_passes_test(is_not_client)
+def create_invoice(request):
     if request.method == 'POST':
         patient_id = request.POST.get('patient')
         service = request.POST.get('service')
         amount = request.POST.get('amount')
         payment_status = request.POST.get('payment_status', 'unpaid')
         
-        # Solo permitir estado "pagado" para admin y veterinario
         if payment_status == 'paid' and not (
             request.user.is_superuser or 
             request.user.groups.filter(name='Veterinario').exists()
@@ -52,17 +57,23 @@ def create_invoice(request):
             messages.error(request, 'Por favor complete todos los campos.')
     
     patients = Client.objects.all()
-    is_staff = request.user.is_superuser or request.user.groups.filter(name='Veterinario').exists()
-    return render(request, 'billing/create_invoice.html', {
+    context = {
         'patients': patients,
-        'is_staff': is_staff
-    })
+        'is_staff': request.user.is_superuser or request.user.groups.filter(name='Veterinario').exists()
+    }
+    return render(request, 'billing/create_invoice.html', context)
 
-# Ver factura (sin modificaciones, ya correcto)
 @login_required
-def view_invoice(request, pk):
+@user_passes_test(lambda u: u.groups.filter(name='Veterinario').exists())
+def delete_invoice(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
-    if request.user.groups.filter(name='Cliente').exists() and invoice.client != request.user.client:
-        # Bloquear acceso si el cliente intenta ver una factura que no es suya
-        return redirect('list_invoices')
-    return render(request, 'billing/view_invoice.html', {'invoice': invoice})
+    
+    if request.method == 'POST':
+        try:
+            invoice.delete()
+            messages.success(request, 'Factura eliminada exitosamente.')
+            return redirect('list_invoices')
+        except Exception as e:
+            messages.error(request, f'Error al eliminar la factura: {str(e)}')
+    
+    return render(request, 'billing/delete_invoice.html', {'invoice': invoice})

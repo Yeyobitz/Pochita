@@ -7,7 +7,9 @@
 <div class="table-container">
     <div class="header-actions">
         <h2>Listado de Facturas</h2>
-        <a href="{% url 'create_invoice' %}" class="btn-view">Crear Nueva Factura</a>
+        {% if not user.groups.all.0.name == 'Cliente' %}
+            <a href="{% url 'create_invoice' %}" class="btn-view">Crear Nueva Factura</a>
+        {% endif %}
     </div>
 
     <table>
@@ -35,6 +37,14 @@
                 </td>
                 <td data-label="Acciones" class="action-buttons">
                     <a href="{% url 'view_invoice' invoice.pk %}" class="btn-view">Ver Detalles</a>
+                    {% with is_vet=user.groups.all|join:"," %}
+                        {% if 'Veterinario' in is_vet %}
+                            <a href="{% url 'delete_invoice' invoice.pk %}" class="btn-delete" 
+                               onclick="return confirm('¿Está seguro que desea eliminar esta factura?')">
+                                <i class="fas fa-trash"></i> Eliminar
+                            </a>
+                        {% endif %}
+                    {% endwith %}
                 </td>
             </tr>
             {% empty %}
