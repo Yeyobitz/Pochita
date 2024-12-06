@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from .models import Appointment
 from users.models import Client, Pet, Vet
 from django.urls import reverse
@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
+from datetime import datetime, timedelta
 
 # Vista para listar citas
 # Listar citas
@@ -23,7 +24,6 @@ def list_appointments(request):
 # Crear una nueva cita
 @login_required
 def create_appointment(request):
-    # Get or create client profile for the user
     client, created = Client.objects.get_or_create(
         user=request.user,
         defaults={
@@ -38,24 +38,35 @@ def create_appointment(request):
         date = request.POST.get('date')
         time = request.POST.get('time')
         
-        # Debug logs
-        print("==== DEBUG CREATE APPOINTMENT ====")
-        print(f"POST data: {request.POST}")
-        print(f"Pet ID: {pet_id}")
-        print(f"Vet ID: {vet_id}")
-        print(f"Date: {date}")
-        print(f"Time: {time}")
-        
         if all([pet_id, vet_id, date, time]):
             try:
-                # Intentar obtener las instancias necesarias
+                # Verificación estricta de disponibilidad
+                existing_appointments = Appointment.objects.filter(
+                    vet_id=vet_id,
+                    date=date,
+                    time=time,
+                    status__in=['SCHEDULED', 'CONFIRMED']  # Verificar tanto citas programadas como confirmadas
+                ).count()
+                
+                if existing_appointments > 0:
+                    messages.error(request, 'El veterinario ya tiene una cita programada en este horario. Por favor seleccione otro horario.')
+                    return redirect('create_appointment')
+
                 pet = Pet.objects.get(id=pet_id)
-                print(f"Pet found: {pet}")
-                
                 vet = Vet.objects.get(id=vet_id)
-                print(f"Vet found: {vet}")
                 
-                # Crear la cita
+                # Verificar si el cliente ya tiene una cita en ese horario
+                client_existing_appointments = Appointment.objects.filter(
+                    client=client,
+                    date=date,
+                    time=time,
+                    status__in=['SCHEDULED', 'CONFIRMED']
+                ).count()
+                
+                if client_existing_appointments > 0:
+                    messages.error(request, 'Usted ya tiene una cita programada en este horario. Por favor seleccione otro horario.')
+                    return redirect('create_appointment')
+                
                 appointment = Appointment.objects.create(
                     client=client,
                     pet=pet,
@@ -64,18 +75,15 @@ def create_appointment(request):
                     time=time,
                     status='SCHEDULED'
                 )
-                print(f"Appointment created: {appointment}")
                 
                 messages.success(request, 'Cita agendada exitosamente.')
                 return redirect('list_appointments')
+                
             except Pet.DoesNotExist:
-                print("Error: Pet not found")
                 messages.error(request, 'La mascota seleccionada no existe.')
             except Vet.DoesNotExist:
-                print("Error: Vet not found")
                 messages.error(request, 'El veterinario seleccionado no existe.')
             except Exception as e:
-                print(f"Error: {str(e)}")
                 messages.error(request, f'Error al agendar la cita: {str(e)}')
         else:
             missing = []
@@ -83,17 +91,10 @@ def create_appointment(request):
             if not vet_id: missing.append('veterinario')
             if not date: missing.append('fecha')
             if not time: missing.append('hora')
-            print(f"Missing fields: {', '.join(missing)}")
             messages.error(request, f'Por favor complete los siguientes campos: {", ".join(missing)}')
 
-    # Obtener las opciones para el formulario
     vets = Vet.objects.all()
     pets = Pet.objects.filter(client=client)
-    
-    # Debug log de opciones disponibles
-    print("==== Available Options ====")
-    print(f"Vets: {list(vets.values_list('id', 'user__username'))}")
-    print(f"Pets: {list(pets.values_list('id', 'name'))}")
     
     context = {
         'client': client,
@@ -124,6 +125,19 @@ def update_appointment(request, appointment_id):
                 status = 'SCHEDULED'
         
         try:
+            # Verificar disponibilidad (excluyendo la cita actual)
+            existing_appointment = Appointment.objects.filter(
+                vet_id=vet_id,
+                date=date,
+                time=time,
+                status='SCHEDULED'
+            ).exclude(id=appointment_id).exists()
+            
+            if existing_appointment:
+                messages.error(request, 'El veterinario ya tiene una cita programada en este horario.')
+                return redirect('update_appointment', appointment_id=appointment_id)
+
+            # Actualizar la cita
             appointment.pet_id = pet_id
             appointment.vet_id = vet_id
             appointment.date = date
@@ -173,3 +187,81 @@ def cancel_appointment(request, appointment_id):
         messages.error(request, f'Error al eliminar la cita: {str(e)}')
     
     return redirect('list_appointments')
+
+def check_availability(request):
+    vet_id = request.GET.get('vet')
+    date_str = request.GET.get('date')
+    time_str = request.GET.get('time')
+    
+    if not all([vet_id, date_str, time_str]):
+        return JsonResponse({'available': False, 'error': 'Faltan parámetros requeridos'})
+    
+    try:
+        # Convertir la hora seleccionada a datetime
+        selected_datetime = datetime.strptime(f"{date_str} {time_str}", '%Y-%m-%d %H:%M')
+        current_datetime = datetime.now()
+        
+        # Verificar si la hora seleccionada es del pasado
+        if selected_datetime < current_datetime:
+            return JsonResponse({
+                'available': False,
+                'error': 'No se pueden agendar citas en fechas u horas pasadas.'
+            })
+        
+        # Obtener todas las citas del día ordenadas por hora
+        existing_appointments = Appointment.objects.filter(
+            vet_id=vet_id,
+            date=date_str,
+            status='SCHEDULED'
+        ).order_by('time')
+        
+        # Función para verificar si una hora está disponible
+        def is_time_available(check_datetime):
+            # Convertir a string para comparación
+            check_time_str = check_datetime.strftime('%H:%M')
+            
+            for apt in existing_appointments:
+                apt_time_str = apt.time.strftime('%H:%M')
+                apt_datetime = datetime.strptime(f"{date_str} {apt_time_str}", '%Y-%m-%d %H:%M')
+                
+                time_diff = abs((apt_datetime - check_datetime).total_seconds())
+                if time_diff < 3600:  # menos de 1 hora de diferencia
+                    return False
+            return True
+        
+        # Verificar si la hora seleccionada está disponible
+        if is_time_available(selected_datetime):
+            return JsonResponse({'available': True})
+        
+        # Buscar horas disponibles cercanas
+        available_times = []
+        base_time = selected_datetime.replace(minute=0)  # Empezar desde la hora en punto
+        
+        # Revisar 3 horas antes y después
+        for hour_offset in range(-3, 4):
+            check_time = base_time + timedelta(hours=hour_offset)
+            for minute in range(0, 60, 1):  # Revisar cada minuto
+                check_datetime = check_time + timedelta(minutes=minute)
+                if check_datetime > current_datetime and is_time_available(check_datetime):
+                    available_times.append(check_datetime.strftime('%H:%M'))
+        
+        # Filtrar para obtener solo la hora anterior y posterior más cercanas
+        available_times.sort()
+        selected_time_str = selected_datetime.strftime('%H:%M')
+        prev_times = [t for t in available_times if t < selected_time_str]
+        next_times = [t for t in available_times if t > selected_time_str]
+        
+        final_times = []
+        if prev_times:
+            final_times.append(prev_times[-1])  # Última hora anterior disponible
+        if next_times:
+            final_times.append(next_times[0])   # Primera hora posterior disponible
+        
+        return JsonResponse({
+            'available': False,
+            'available_times': final_times
+        })
+        
+    except Exception as e:
+        print(f"Error en check_availability: {str(e)}")
+        return JsonResponse({'available': False, 'error': str(e)})

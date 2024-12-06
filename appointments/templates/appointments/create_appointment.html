@@ -5,6 +5,80 @@
 
 {% block extra_head %}
 <link rel="stylesheet" href="{% static 'styles/comp_thing.css' %}">
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const vetSelect = document.getElementById('id_vet');
+        const dateInput = document.getElementById('id_date');
+        const timeInput = document.getElementById('id_time');
+        const submitButton = document.querySelector('.btn-save');
+
+        async function checkAvailability() {
+            if (vetSelect.value && dateInput.value && timeInput.value) {
+                try {
+                    const response = await fetch(`/appointments/check-availability/?vet=${vetSelect.value}&date=${dateInput.value}&time=${timeInput.value}`);
+                    const data = await response.json();
+                    
+                    if (!data.available) {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            let message = 'El veterinario tiene una cita programada.\n\nHoras disponibles:';
+                            
+                            if (data.available_times && data.available_times.length > 0) {
+                                data.available_times.forEach(time => {
+                                    message += `\n- ${time}`;
+                                });
+                            } else {
+                                message += '\nNo hay horas disponibles cercanas.';
+                            }
+                            
+                            alert(message);
+                        }
+                        submitButton.disabled = true;
+                        return false;
+                    } else {
+                        submitButton.disabled = false;
+                        return true;
+                    }
+                } catch (error) {
+                    console.error('Error al verificar disponibilidad:', error);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const options = { 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric'
+            };
+            return date.toLocaleDateString('es-ES', options);
+        }
+
+        // Agregar validación de fecha mínima al cargar la página
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        
+        dateInput.min = `${yyyy}-${mm}-${dd}`;
+
+        // Agregar validación antes del envío del formulario
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (await checkAvailability()) {
+                this.submit();
+            }
+        });
+
+        vetSelect.addEventListener('change', checkAvailability);
+        dateInput.addEventListener('change', checkAvailability);
+        timeInput.addEventListener('change', checkAvailability);
+    });
+</script>
 {% endblock extra_head %}
 
 {% block heading %}{% endblock heading %}
